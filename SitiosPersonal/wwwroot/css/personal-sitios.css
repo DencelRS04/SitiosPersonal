@@ -1,0 +1,144 @@
+﻿body {
+    background-color: #f4f6fb;
+    font-size: 14px;
+}
+
+.sidebar {
+    min-height: 100vh;
+    background: #243b73;
+    color: white;
+}
+
+.sidebar-title {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.sidebar-subtitle {
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
+.sidebar .nav-link {
+    color: #e5e7eb;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+    .sidebar .nav-link:hover {
+        background: #1d2f5e;
+        color: white;
+    }
+
+    .sidebar .nav-link i {
+        width: 22px;
+    }
+
+.topbar {
+    background: white;
+    min-height: 60px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.page-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.content-wrapper {
+    padding: 25px;
+}
+
+.crud-card {
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
+
+.crud-card-header {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 20px;
+}
+
+.crud-card-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #243b73;
+    margin: 0;
+}
+
+.table thead {
+    background: #343a40;
+    color: white;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.btn-icon {
+    width: 33px;
+    height: 33px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-card {
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
+
+.form-section-title {
+    color: #243b73;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.form-action-panel {
+    background: white;
+    border-left: 4px solid #2563eb;
+    border-radius: 4px;
+    padding: 28px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.06);
+}
+
+.action-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: #5b7cfa;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    text-decoration: none;
+}
+
+    .action-circle:hover {
+        background: #4169e1;
+        color: white;
+    }

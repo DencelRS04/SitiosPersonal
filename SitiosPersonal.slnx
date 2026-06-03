@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SitiosPersonal.Entities/SitiosPersonal.Entities.csproj" />
+  <Project Path="SitiosPersonal.Repository/SitiosPersonal.Repository.csproj" />
+  <Project Path="SitiosPersonal.Services/SitiosPersonal.Services.csproj" />
+  <Project Path="SitiosPersonal/SitiosPersonal.csproj" />
+</Solution>

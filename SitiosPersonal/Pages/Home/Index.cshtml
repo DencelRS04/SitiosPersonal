@@ -1,0 +1,36 @@
+﻿@page
+@model SitiosPersonal.Pages.Home.IndexModel
+
+@{
+    ViewData["Title"] = "Bienvenida";
+}
+
+<div class="crud-card card">
+
+    <div class="card-body text-center p-5">
+
+        <div class="mb-4">
+            <div class="bg-primary text-white rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                 style="width:90px; height:90px; font-size:35px;">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+
+        <h1 class="mb-3">
+            Bienvenido, @Model.NombreCompleto
+        </h1>
+
+        <p class="text-muted fs-5">
+            Sistema de Administración de Personal
+        </p>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger mt-4">
+                @TempData["Error"]
+            </div>
+        }
+
+    </div>
+
+</div>
