@@ -1,0 +1,87 @@
+@page "/Oferentes/PreparacionAcademica/{idOferente:int}/Editar/{id:int}"
+@model SitiosPersonal.Pages.Oferentes.PreparacionAcademica.EditarModel
+
+@{
+    ViewData["Title"] = "Editar Preparación Académica";
+}
+
+<form method="post">
+
+    <div class="form-action-panel">
+        <a asp-page="Index"
+           asp-route-idOferente="@Model.Preparacion.id_oferente"
+           class="action-circle" title="Regresar">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
+
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Editar Preparación Académica</h4>
+            <small class="text-white-50">@Model.Preparacion.NombreOferente</small>
+        </div>
+
+        <div class="card-body">
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <input type="hidden" asp-for="Preparacion.id_preparacion" />
+            <input type="hidden" asp-for="Preparacion.id_oferente" />
+            <input type="hidden" asp-for="Preparacion.NombreOferente" />
+
+            <div class="row">
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Institución educativa <span class="text-danger">*</span></label>
+                    <select asp-for="Preparacion.id_institucion" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                        @foreach (var inst in Model.Preparacion.InstitucionesDisponibles)
+                        {
+                            <option value="@inst.id_institucion">[@inst.codigo] @inst.nombre</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Preparacion.id_institucion" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Nombre del título obtenido <span class="text-danger">*</span></label>
+                    <input asp-for="Preparacion.titulo" class="form-control" maxlength="100" />
+                    <span asp-validation-for="Preparacion.titulo" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Fecha de inicio <span class="text-danger">*</span></label>
+                    <input asp-for="Preparacion.fecha_inicio" type="date" class="form-control" />
+                    <span asp-validation-for="Preparacion.fecha_inicio" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Fecha de fin <span class="text-danger">*</span></label>
+                    <input asp-for="Preparacion.fecha_fin" type="date" class="form-control" />
+                    <span asp-validation-for="Preparacion.fecha_fin" class="text-danger"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

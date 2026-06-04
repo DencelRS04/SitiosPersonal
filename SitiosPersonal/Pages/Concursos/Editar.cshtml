@@ -1,0 +1,85 @@
+@page "/Concursos/Editar/{id:int}"
+@model SitiosPersonal.Pages.Concursos.EditarModel
+
+@{
+    ViewData["Title"] = "Formulario Concurso";
+}
+
+<form method="post">
+
+    <div class="form-action-panel">
+        <a asp-page="Index" class="action-circle" title="Regresar">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
+
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Formulario Concurso</h4>
+        </div>
+
+        <div class="card-body">
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <input type="hidden" asp-for="Concurso.id_concurso" />
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Código <span class="text-danger">*</span></label>
+                    <input asp-for="Concurso.codigo" class="form-control" maxlength="50" />
+                    <span asp-validation-for="Concurso.codigo" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Nombre <span class="text-danger">*</span></label>
+                    <input asp-for="Concurso.nombre" class="form-control" maxlength="150" />
+                    <span asp-validation-for="Concurso.nombre" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Fecha de inicio <span class="text-danger">*</span></label>
+                    <input asp-for="Concurso.fecha_inicio" type="date" class="form-control" />
+                    <span asp-validation-for="Concurso.fecha_inicio" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Fecha de fin <span class="text-danger">*</span></label>
+                    <input asp-for="Concurso.fecha_fin" type="date" class="form-control" />
+                    <span asp-validation-for="Concurso.fecha_fin" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Estado <span class="text-danger">*</span></label>
+                    <select asp-for="Concurso.estado" class="form-select">
+                        <option value="VIGENTE">Vigente</option>
+                        <option value="VENCIDO">Vencido</option>
+                    </select>
+                    <span asp-validation-for="Concurso.estado" class="text-danger"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
