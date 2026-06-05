@@ -1,40 +1,33 @@
-@page "/Concursos"
-@model SitiosPersonal.Pages.Concursos.IndexModel
+@page "/Oferentes/Entrevistas"
+@model SitiosPersonal.Pages.Entrevistas.IndexModel
 
 @{
-    ViewData["Title"] = "Concursos";
+    ViewData["Title"] = "Agendar Entrevistas";
 }
 
 <div class="crud-card card">
 
     <div class="crud-card-header d-flex justify-content-between align-items-center">
-
         <h4 class="crud-card-title">
-            <i class=></i>
-            Mantenimiento de Concursos
+            Agendar Entrevistas
         </h4>
 
         <a asp-page="Crear" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i>
-            Nuevo
+            Agendar nueva entrevista
         </a>
-
     </div>
 
     <div class="card-body">
 
         @if (TempData["Exito"] != null)
         {
-            <div class="alert alert-success">
-                @TempData["Exito"]
-            </div>
+            <div class="alert alert-success">@TempData["Exito"]</div>
         }
 
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger">
-                @TempData["Error"]
-            </div>
+            <div class="alert alert-danger">@TempData["Error"]</div>
         }
 
         <div class="table-responsive">
@@ -43,57 +36,55 @@
 
                 <thead>
                     <tr>
-                        <th style="width:80px;">ID</th>
-                        <th style="width:130px;">Código</th>
-                        <th>Nombre</th>
-                        <th style="width:130px;">Fecha inicio</th>
-                        <th style="width:130px;">Fecha fin</th>
+                        <th>Oferente</th>
+                        <th>Entrevistador</th>
+                        <th style="width:130px;">Fecha entrevista</th>
                         <th style="width:110px;">Estado</th>
                         <th style="width:170px;">Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @if (Model.Lista.Concursos.Any())
+                    @if (Model.Lista.Entrevistas.Any())
                     {
-                        foreach (var item in Model.Lista.Concursos)
+                        foreach (var item in Model.Lista.Entrevistas)
                         {
                             <tr>
-                                <td>@item.id_concurso</td>
-                                <td>@item.codigo</td>
-                                <td>@item.nombre</td>
-                                <td>@item.fecha_inicio.ToString("dd/MM/yyyy")</td>
-                                <td>@item.fecha_fin.ToString("dd/MM/yyyy")</td>
+                                <td>@item.NombreOferente</td>
+                                <td>[@item.NumeroEmpleado] @item.NombreEmpleado</td>
+                                <td>@item.fecha_entrevista.ToString("dd/MM/yyyy")</td>
                                 <td>
-                                    <span class="badge @(item.estado == "VIGENTE" ? "bg-success" : "bg-secondary")">
+                                    <span class="badge @(item.estado == "PENDIENTE" ? "bg-warning text-dark" : "bg-success")">
                                         @item.estado
                                     </span>
                                 </td>
                                 <td>
                                     <a asp-page="Editar"
-                                       asp-route-id="@item.id_concurso"
+                                       asp-route-id="@item.id_entrevista"
                                        class="btn btn-primary btn-sm btn-icon"
-                                       title="Editar">
+                                       title="Cambiar datos">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
-                                    <form asp-page-handler="CambiarEstado"
-                                          asp-route-id="@item.id_concurso"
-                                          method="post"
-                                          class="d-inline">
-                                        <button type="submit"
-                                                class="btn btn-warning btn-sm btn-icon"
-                                                title="Vigente/Vencido"
-                                                >
-                                            <i class="fas fa-power-off"></i>
-                                        </button>
-                                    </form>
+                                    @if (item.estado == "PENDIENTE")
+                                    {
+                                        <form asp-page-handler="MarcarRealizada"
+                                              asp-route-id="@item.id_entrevista"
+                                              method="post"
+                                              class="d-inline">
+                                            <button type="submit"
+                                                    class="btn btn-success btn-sm btn-icon"
+                                                    title="Marcar como completada">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                    }
 
                                     <button type="button"
                                             class="btn btn-danger btn-sm btn-icon"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEliminar"
-                                            data-id="@item.id_concurso"
+                                            data-id="@item.id_entrevista"
 
                                             title="Eliminar">
                                         <i class="fas fa-trash"></i>
@@ -105,7 +96,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="7" class="text-center text-muted">
+                            <td colspan="5" class="text-center text-muted">
                                 No se encontraron registros.
                             </td>
                         </tr>
@@ -138,7 +129,6 @@
 
 </div>
 
-
 <div class="modal fade" id="modalEliminar" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -147,9 +137,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                ¿Realmente desea eliminar el concurso seleccionado?
+                ¿Realmente desea eliminar el elemento seleccionado?
                 <br />
-                <strong id="nombreConcursoEliminar"></strong>
+                <strong id="nombreEntrevistaEliminar"></strong>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -163,19 +153,15 @@
 
 @section Scripts {
     <script>
-        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
-            new bootstrap.Tooltip(el);
-        });
-
         const modalEliminar = document.getElementById('modalEliminar');
         modalEliminar.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
             const id = button.getAttribute('data-id');
             const nombre = button.getAttribute('data-nombre');
 
-            document.getElementById('nombreConcursoEliminar').textContent = nombre;
+            document.getElementById('nombreEntrevistaEliminar').textContent = nombre;
             document.getElementById('formEliminar').action =
-                '/Concursos?handler=Eliminar&id=' + id;
+                '/Oferentes/Entrevistas?handler=Eliminar&id=' + id;
         });
     </script>
 }
