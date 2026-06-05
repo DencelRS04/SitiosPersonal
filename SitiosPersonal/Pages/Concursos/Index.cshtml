@@ -71,9 +71,9 @@
                                 </td>
                                 <td>
                                     <a asp-page="Editar"
-                                       asp-route-id="@item.id_concurso"
-                                       class="btn btn-primary btn-sm btn-icon"
-                                       title="Editar">
+                                           asp-route-id="@item.id_concurso"
+                                           class="btn btn-primary btn-sm btn-icon"
+                                           title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
@@ -83,8 +83,7 @@
                                           class="d-inline">
                                         <button type="submit"
                                                 class="btn btn-warning btn-sm btn-icon"
-                                                title="Vigente/Vencido"
-                                                >
+                                                title="Vigente/Vencido">
                                             <i class="fas fa-power-off"></i>
                                         </button>
                                     </form>
@@ -94,7 +93,6 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEliminar"
                                             data-id="@item.id_concurso"
-
                                             title="Eliminar">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -124,8 +122,8 @@
                     {
                         <li class="page-item @(numeroPagina == Model.Lista.Pagina ? "active" : "")">
                             <a class="page-link"
-                               asp-page="Index"
-                               asp-route-pagina="@numeroPagina">
+                                   asp-page="Index"
+                                   asp-route-pagina="@numeroPagina">
                                 @numeroPagina
                             </a>
                         </li>

@@ -1,21 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Entrevistas
 {
     public class IndexModel : PageModel
     {
-        private readonly EntrevistasRepository _repository;
+        private readonly EntrevistasService _repository;
         private readonly BitacoraService _bitacoraService;
-        private readonly PermisosRepository _permisosRepository;
+        private readonly PermisosService _permisosRepository;
 
         public IndexModel(
-            EntrevistasRepository repository,
+            EntrevistasService repository,
             BitacoraService bitacoraService,
-            PermisosRepository permisosRepository)
+            PermisosService permisosRepository)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;
@@ -34,10 +34,10 @@ namespace SitiosPersonal.Pages.Entrevistas
 
             Lista = new EntrevistasListaViewModel
             {
-                Pagina            = pagina,
+                Pagina = pagina,
                 CantidadPorPagina = cantidadPorPagina,
-                TotalRegistros    = _repository.Contar(),
-                Entrevistas       = _repository.ListarPaginado(pagina, cantidadPorPagina)
+                TotalRegistros = _repository.Contar(),
+                Entrevistas = _repository.ListarPaginado(pagina, cantidadPorPagina)
             };
 
             _bitacoraService.RegistrarConsulta(idUsuario, "Entrevistas");

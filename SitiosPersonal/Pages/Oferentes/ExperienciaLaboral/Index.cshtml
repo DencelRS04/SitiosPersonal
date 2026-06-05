@@ -18,14 +18,14 @@
 
         <div class="d-flex gap-2">
             <a href="/Oferentes/Editar/@Model.Lista.id_oferente"
-               class="btn btn-secondary btn-sm">
+                   class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i>
                 Volver al oferente
             </a>
 
             <a asp-page="Crear"
-               asp-route-idOferente="@Model.Lista.id_oferente"
-               class="btn btn-primary btn-sm">
+                   asp-route-idOferente="@Model.Lista.id_oferente"
+                   class="btn btn-primary btn-sm">
                 <i class="fas fa-plus"></i>
                 Nuevo
             </a>
@@ -71,9 +71,9 @@
                                 <td>@item.fecha_fin.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <a asp-page="Editar"
-                                       asp-route-idOferente="@item.id_oferente"
-                                       asp-route-id="@item.id_experiencia"
-                                       class="btn btn-primary btn-sm btn-icon">
+                                           asp-route-idOferente="@item.id_oferente"
+                                           asp-route-id="@item.id_experiencia"
+                                           class="btn btn-primary btn-sm btn-icon">
                                         <i class="fas fa-edit"></i>
                                     </a>
 

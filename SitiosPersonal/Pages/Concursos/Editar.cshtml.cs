@@ -2,17 +2,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Concursos
 {
     public class EditarModel : PageModel
     {
-        private readonly ConcursosRepository _repository;
+        private readonly ConcursosService _repository;
         private readonly BitacoraService _bitacoraService;
 
-        public EditarModel(ConcursosRepository repository, BitacoraService bitacoraService)
+        public EditarModel(ConcursosService repository, BitacoraService bitacoraService)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;
@@ -37,12 +37,12 @@ namespace SitiosPersonal.Pages.Concursos
 
             Concurso = new ConcursoViewModel
             {
-                id_concurso  = concurso.id_concurso,
-                codigo       = concurso.codigo,
-                nombre       = concurso.nombre,
+                id_concurso = concurso.id_concurso,
+                codigo = concurso.codigo,
+                nombre = concurso.nombre,
                 fecha_inicio = concurso.fecha_inicio,
-                fecha_fin    = concurso.fecha_fin,
-                estado       = concurso.estado
+                fecha_fin = concurso.fecha_fin,
+                estado = concurso.estado
             };
 
             return Page();
@@ -77,12 +77,12 @@ namespace SitiosPersonal.Pages.Concursos
 
             var concursoActual = new Concurso
             {
-                id_concurso  = id,
-                codigo       = Concurso.codigo.Trim(),
-                nombre       = Concurso.nombre.Trim(),
+                id_concurso = id,
+                codigo = Concurso.codigo.Trim(),
+                nombre = Concurso.nombre.Trim(),
                 fecha_inicio = Concurso.fecha_inicio!.Value,
-                fecha_fin    = Concurso.fecha_fin!.Value,
-                estado       = Concurso.estado
+                fecha_fin = Concurso.fecha_fin!.Value,
+                estado = Concurso.estado
             };
 
             _repository.Actualizar(concursoActual);

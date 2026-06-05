@@ -1,21 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Concursos
 {
     public class IndexModel : PageModel
     {
-        private readonly ConcursosRepository _repository;
+        private readonly ConcursosService _repository;
         private readonly BitacoraService _bitacoraService;
-        private readonly PermisosRepository _permisosRepository;
+        private readonly PermisosService _permisosRepository;
 
         public IndexModel(
-            ConcursosRepository repository,
+            ConcursosService repository,
             BitacoraService bitacoraService,
-            PermisosRepository permisosRepository)
+            PermisosService permisosRepository)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;

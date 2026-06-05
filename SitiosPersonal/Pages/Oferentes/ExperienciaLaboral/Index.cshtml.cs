@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
 {
     public class IndexModel : PageModel
     {
-        private readonly ExperienciaLaboralRepository _repository;
-        private readonly OferentesRepository _oferentesRepository;
+        private readonly ExperienciaLaboralService _repository;
+        private readonly OferentesService _oferentesRepository;
         private readonly BitacoraService _bitacoraService;
 
         public IndexModel(
-            ExperienciaLaboralRepository repository,
-            OferentesRepository oferentesRepository,
+            ExperienciaLaboralService repository,
+            OferentesService oferentesRepository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -42,9 +42,9 @@ namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
 
             Lista = new ExperienciaLaboralListaViewModel
             {
-                id_oferente    = idOferente,
+                id_oferente = idOferente,
                 NombreOferente = oferente.nombre_completo,
-                Registros      = _repository.ListarPorOferente(idOferente)
+                Registros = _repository.ListarPorOferente(idOferente)
             };
 
             _bitacoraService.RegistrarConsulta(idUsuario, $"ExperienciaLaboral (Oferente {idOferente})");

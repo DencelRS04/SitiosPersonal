@@ -1,17 +1,23 @@
 ﻿@page "/Seguridad/Modulos/Crear"
 @model SitiosPersonal.Pages.Seguridad.Modulos.CrearModel
-@{ ViewData["Title"] = "Formulario Pantalla"; }
+@{
+    ViewData["Title"] = "Formulario Pantalla";
+}
 <form method="post">
     <div class="form-action-panel"><a asp-page="Index" class="action-circle" title="Regresar"><i class="fas fa-arrow-left"></i></a><button type="submit" class="action-circle" title="Guardar"><i class="fas fa-save"></i></button></div>
-    <div class="form-card card"><div class="crud-card-header"><h4 class="crud-card-title">Formulario Pantalla</h4></div><div class="card-body">
+    <div class="form-card card">
+        <div class="crud-card-header"><h4 class="crud-card-title">Formulario Pantalla</h4></div><div class="card-body">
         
         <div class="mb-3"><label class="form-label">Nombre de la pantalla</label><input asp-for="Pantalla.nombre" class="form-control" maxlength="100" /><span asp-validation-for="Pantalla.nombre" class="text-danger"></span></div>
-        <div class="mb-4"><h5 class="form-section-title">Roles asociados</h5><div class="row">
-        @foreach (var rol in Model.Pantalla.RolesDisponibles)
-        {
-            bool seleccionado = false;
-            <div class="col-md-4 mb-2"><div class="form-check"><input type="checkbox" name="Pantalla.RolesSeleccionados" value="@rol.id_rol" class="form-check-input" checked="@seleccionado" /><label class="form-check-label">@rol.nombre</label></div></div>
-        }
-        </div></div>
-    </div></div>
+        <div class="mb-4">
+            <h5 class="form-section-title">Roles asociados</h5><div class="row">
+            @foreach (var rol in Model.Pantalla.RolesDisponibles)
+            {
+                bool seleccionado = false;
+                <div class="col-md-4 mb-2"><div class="form-check"><input type="checkbox" name="Pantalla.RolesSeleccionados" value="@rol.id_rol" class="form-check-input" checked="@seleccionado" /><label class="form-check-label">@rol.nombre</label></div></div>
+            }
+        </div>
+    </div>
+</div>
+</div>
 </form>

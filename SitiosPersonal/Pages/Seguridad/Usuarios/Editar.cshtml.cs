@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Helpers;
 using SitiosPersonal.Services.Services;
 
@@ -10,8 +10,8 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
 {
     public class EditarModel : PageModel
     {
-        private readonly UsuariosRepository _repository; private readonly BitacoraService _bitacoraService; private readonly EncryptionHelper _encryptionHelper;
-        public EditarModel(UsuariosRepository repository, BitacoraService bitacoraService, EncryptionHelper encryptionHelper) { _repository = repository; _bitacoraService = bitacoraService; _encryptionHelper = encryptionHelper; }
+        private readonly UsuariosService _repository; private readonly BitacoraService _bitacoraService; private readonly EncryptionHelper _encryptionHelper;
+        public EditarModel(UsuariosService repository, BitacoraService bitacoraService, EncryptionHelper encryptionHelper) { _repository = repository; _bitacoraService = bitacoraService; _encryptionHelper = encryptionHelper; }
         [BindProperty] public UsuarioViewModel Usuario { get; set; } = new UsuarioViewModel();
         public IActionResult OnGet(int id)
         {

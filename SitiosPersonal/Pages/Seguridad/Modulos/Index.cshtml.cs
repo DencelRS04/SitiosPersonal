@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Modulos
 {
     public class IndexModel : PageModel
     {
-        private readonly PantallasRepository _repository;
+        private readonly PantallasService _repository;
         private readonly BitacoraService _bitacoraService;
-        private readonly PermisosRepository _permisosRepository;
+        private readonly PermisosService _permisosRepository;
 
-        public IndexModel(PantallasRepository repository, BitacoraService bitacoraService, PermisosRepository permisosRepository)
+        public IndexModel(PantallasService repository, BitacoraService bitacoraService, PermisosService permisosRepository)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;

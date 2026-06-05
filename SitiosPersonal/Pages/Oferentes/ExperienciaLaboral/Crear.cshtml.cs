@@ -2,20 +2,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
 {
     public class CrearModel : PageModel
     {
-        private readonly ExperienciaLaboralRepository _repository;
-        private readonly OferentesRepository _oferentesRepository;
+        private readonly ExperienciaLaboralService _repository;
+        private readonly OferentesService _oferentesRepository;
         private readonly BitacoraService _bitacoraService;
 
         public CrearModel(
-            ExperienciaLaboralRepository repository,
-            OferentesRepository oferentesRepository,
+            ExperienciaLaboralService repository,
+            OferentesService oferentesRepository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -40,7 +40,7 @@ namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
                 return RedirectToPage("/Oferentes/Index");
             }
 
-            Experiencia.id_oferente    = idOferente;
+            Experiencia.id_oferente = idOferente;
             Experiencia.NombreOferente = oferente.nombre_completo;
 
             return Page();
@@ -63,11 +63,11 @@ namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
 
             var experiencia = new Entities.Models.ExperienciaLaboral
             {
-                id_oferente  = idOferente,
-                empresa      = Experiencia.empresa.Trim(),
-                puesto       = Experiencia.puesto.Trim(),
+                id_oferente = idOferente,
+                empresa = Experiencia.empresa.Trim(),
+                puesto = Experiencia.puesto.Trim(),
                 fecha_inicio = Experiencia.fecha_inicio!.Value,
-                fecha_fin    = Experiencia.fecha_fin!.Value
+                fecha_fin = Experiencia.fecha_fin!.Value
             };
 
             int idExperiencia = _repository.Crear(experiencia);

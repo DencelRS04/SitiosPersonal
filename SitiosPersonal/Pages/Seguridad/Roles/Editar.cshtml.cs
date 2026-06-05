@@ -2,17 +2,17 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Roles
 {
     public class EditarModel : PageModel
     {
-        private readonly RolesRepository _repository;
+        private readonly RolesService _repository;
         private readonly BitacoraService _bitacoraService;
 
-        public EditarModel(RolesRepository repository, BitacoraService bitacoraService)
+        public EditarModel(RolesService repository, BitacoraService bitacoraService)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;

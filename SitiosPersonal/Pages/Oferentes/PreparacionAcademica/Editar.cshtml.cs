@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
 {
     public class EditarModel : PageModel
     {
-        private readonly PreparacionAcademicaRepository _repository;
-        private readonly OferentesRepository _oferentesRepository;
+        private readonly PreparacionAcademicaService _repository;
+        private readonly OferentesService _oferentesRepository;
         private readonly BitacoraService _bitacoraService;
 
         public EditarModel(
-            PreparacionAcademicaRepository repository,
-            OferentesRepository oferentesRepository,
+            PreparacionAcademicaService repository,
+            OferentesService oferentesRepository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -43,13 +43,13 @@ namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
 
             Preparacion = new PreparacionAcademicaViewModel
             {
-                id_preparacion       = preparacion.id_preparacion,
-                id_oferente          = idOferente,
-                NombreOferente       = oferente?.nombre_completo ?? "",
-                id_institucion       = preparacion.id_institucion,
-                titulo               = preparacion.titulo,
-                fecha_inicio         = preparacion.fecha_inicio,
-                fecha_fin            = preparacion.fecha_fin,
+                id_preparacion = preparacion.id_preparacion,
+                id_oferente = idOferente,
+                NombreOferente = oferente?.nombre_completo ?? "",
+                id_institucion = preparacion.id_institucion,
+                titulo = preparacion.titulo,
+                fecha_inicio = preparacion.fecha_inicio,
+                fecha_fin = preparacion.fecha_fin,
                 InstitucionesDisponibles = _repository.ListarInstituciones()
             };
 
@@ -82,11 +82,11 @@ namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
             var actualizado = new Entities.Models.PreparacionAcademica
             {
                 id_preparacion = id,
-                id_oferente    = idOferente,
+                id_oferente = idOferente,
                 id_institucion = Preparacion.id_institucion!.Value,
-                titulo         = Preparacion.titulo.Trim(),
-                fecha_inicio   = Preparacion.fecha_inicio!.Value,
-                fecha_fin      = Preparacion.fecha_fin!.Value
+                titulo = Preparacion.titulo.Trim(),
+                fecha_inicio = Preparacion.fecha_inicio!.Value,
+                fecha_fin = Preparacion.fecha_fin!.Value
             };
 
             _repository.Actualizar(actualizado);

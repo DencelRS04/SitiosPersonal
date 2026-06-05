@@ -15,7 +15,7 @@
         </h4>
 
         <a asp-page="Crear"
-           class="btn btn-primary btn-sm">
+               class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i>
             Nuevo
         </a>
@@ -60,8 +60,8 @@
                                 <td>@item.nombre</td>
                                 <td>
                                     <a asp-page="Editar"
-                                       asp-route-id="@item.id_rol"
-                                       class="btn btn-primary btn-sm btn-icon">
+                                           asp-route-id="@item.id_rol"
+                                           class="btn btn-primary btn-sm btn-icon">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
@@ -100,8 +100,8 @@
                     {
                         <li class="page-item @(numeroPagina == Model.Lista.Pagina ? "active" : "")">
                             <a class="page-link"
-                               asp-page="Index"
-                               asp-route-pagina="@numeroPagina">
+                                   asp-page="Index"
+                                   asp-route-pagina="@numeroPagina">
                                 @numeroPagina
                             </a>
                         </li>

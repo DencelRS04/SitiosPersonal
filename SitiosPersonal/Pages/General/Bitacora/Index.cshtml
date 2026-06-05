@@ -1,39 +1,36 @@
-﻿@page "/General/Bitacora"
-@model SitiosPersonal.Pages.General.Bitacora.IndexModel
+﻿@page
+@model SitiosPersonal.Pages.Home.IndexModel
+
 @{
-    ViewData["Title"] = "Bitácora";
-    int totalPaginas = (int)Math.Ceiling((double)Model.Filtro.TotalRegistros / Model.Filtro.CantidadPorPagina);
+    ViewData["Title"] = "Bienvenida";
 }
-<div class="card shadow border-0">
-    <div class="card-header bg-white"><h4 class="mb-0"><i class="fas fa-history"></i> Bitácora del Sistema</h4></div>
-    <div class="card-body">
-        <form method="get" class="row g-3 mb-4">
-            <div class="col-md-3"><label class="form-label">Usuario</label><input type="text" name="usuarioFiltro" value="@Model.Filtro.UsuarioFiltro" class="form-control" placeholder="Buscar usuario" /></div>
-            <div class="col-md-4"><label class="form-label">Descripción</label><input type="text" name="descripcionFiltro" value="@Model.Filtro.DescripcionFiltro" class="form-control" placeholder="Buscar descripción" /></div>
-            <div class="col-md-3"><label class="form-label">Orden</label><select name="orden" class="form-select"><option value="fecha_desc" selected="@(Model.Filtro.Orden == "fecha_desc")">Fecha descendente</option><option value="fecha_asc" selected="@(Model.Filtro.Orden == "fecha_asc")">Fecha ascendente</option><option value="usuario_asc" selected="@(Model.Filtro.Orden == "usuario_asc")">Usuario A-Z</option><option value="usuario_desc" selected="@(Model.Filtro.Orden == "usuario_desc")">Usuario Z-A</option></select></div>
-            <div class="col-md-2 d-flex align-items-end"><button class="btn btn-primary w-100"><i class="fas fa-search"></i> Buscar</button></div>
-        </form>
-        <div class="table-responsive"><table class="table table-bordered table-hover align-middle"><thead class="table-dark"><tr><th>Fecha</th><th>Usuario</th><th>Tipo</th><th>Entidad</th><th>Descripción</th></tr></thead><tbody>
-        @if (Model.Filtro.Bitacoras.Any())
+
+<div class="crud-card card">
+
+    <div class="card-body text-center p-5">
+
+        <div class="mb-4">
+            <div class="bg-primary text-white rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                 style="width:90px; height:90px; font-size:35px;">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+
+        <h1 class="mb-3">
+            Bienvenido, @Model.NombreCompleto
+        </h1>
+
+        <p class="text-muted fs-5">
+            Sistema de Administración de Personal
+        </p>
+
+        @if (TempData["Error"] != null)
         {
-            foreach (var item in Model.Filtro.Bitacoras)
-            {
-                <tr><td>@item.fecha.ToString("dd/MM/yyyy HH:mm")</td><td>@item.usuario</td><td><span class="badge bg-secondary">@item.tipo</span></td><td>@item.entidad</td><td>@item.descripcion</td></tr>
-            }
+            <div class="alert alert-danger mt-4">
+                @TempData["Error"]
+            </div>
         }
-        else
-        {
-            <tr><td colspan="5" class="text-center text-muted">No se encontraron registros.</td></tr>
-        }
-        </tbody></table></div>
-        @if (totalPaginas > 1)
-        {
-            <nav><ul class="pagination justify-content-center">
-            @for (int numeroPagina = 1; numeroPagina <= totalPaginas; numeroPagina++)
-            {
-                <li class="page-item @(numeroPagina == Model.Filtro.Pagina ? "active" : "")"><a class="page-link" asp-page="Index" asp-route-pagina="@numeroPagina" asp-route-usuarioFiltro="@Model.Filtro.UsuarioFiltro" asp-route-descripcionFiltro="@Model.Filtro.DescripcionFiltro" asp-route-orden="@Model.Filtro.Orden">@numeroPagina</a></li>
-            }
-            </ul></nav>
-        }
+
     </div>
+
 </div>

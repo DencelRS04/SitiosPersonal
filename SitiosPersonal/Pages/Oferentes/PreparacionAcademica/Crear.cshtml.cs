@@ -2,20 +2,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
 {
     public class CrearModel : PageModel
     {
-        private readonly PreparacionAcademicaRepository _repository;
-        private readonly OferentesRepository _oferentesRepository;
+        private readonly PreparacionAcademicaService _repository;
+        private readonly OferentesService _oferentesRepository;
         private readonly BitacoraService _bitacoraService;
 
         public CrearModel(
-            PreparacionAcademicaRepository repository,
-            OferentesRepository oferentesRepository,
+            PreparacionAcademicaService repository,
+            OferentesService oferentesRepository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -40,8 +40,8 @@ namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
                 return RedirectToPage("/Oferentes/Index");
             }
 
-            Preparacion.id_oferente           = idOferente;
-            Preparacion.NombreOferente        = oferente.nombre_completo;
+            Preparacion.id_oferente = idOferente;
+            Preparacion.NombreOferente = oferente.nombre_completo;
             Preparacion.InstitucionesDisponibles = _repository.ListarInstituciones();
 
             return Page();
@@ -66,11 +66,11 @@ namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
 
             var preparacion = new Entities.Models.PreparacionAcademica
             {
-                id_oferente    = idOferente,
+                id_oferente = idOferente,
                 id_institucion = Preparacion.id_institucion!.Value,
-                titulo         = Preparacion.titulo.Trim(),
-                fecha_inicio   = Preparacion.fecha_inicio!.Value,
-                fecha_fin      = Preparacion.fecha_fin!.Value
+                titulo = Preparacion.titulo.Trim(),
+                fecha_inicio = Preparacion.fecha_inicio!.Value,
+                fecha_fin = Preparacion.fecha_fin!.Value
             };
 
             int idPreparacion = _repository.Crear(preparacion);

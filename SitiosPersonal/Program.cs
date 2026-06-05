@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SitiosPersonal.Filters;
-using SitiosPersonal.Repository.Data;
-using SitiosPersonal.Repository.Repositories;
-using SitiosPersonal.Services.Helpers;
-using SitiosPersonal.Services.Services;
+using SitiosPersonal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,26 +39,10 @@ builder.Services.AddRazorPages(options =>
     });
 });
 
-builder.Services.AddSingleton<DbContext>();
-
-builder.Services.AddScoped<LoginRepository>();
-builder.Services.AddScoped<MenuRepository>();
-builder.Services.AddScoped<BitacoraRepository>();
-builder.Services.AddScoped<RolesRepository>();
-builder.Services.AddScoped<PantallasRepository>();
-builder.Services.AddScoped<UsuariosRepository>();
-builder.Services.AddScoped<PermisosRepository>();
-builder.Services.AddScoped<OferentesRepository>();
-builder.Services.AddScoped<ConcursosRepository>();
-builder.Services.AddScoped<PreparacionAcademicaRepository>();
-builder.Services.AddScoped<ExperienciaLaboralRepository>();
-builder.Services.AddScoped<EntrevistasRepository>();
+builder.Services.AddSitiosPersonalServices();
 
 builder.Services.AddScoped<SessionPageFilter>();
 builder.Services.AddScoped<PermisoPageFilter>();
-
-builder.Services.AddScoped<BitacoraService>();
-builder.Services.AddScoped<EncryptionHelper>();
 
 builder.Services.AddSession(options =>
 {

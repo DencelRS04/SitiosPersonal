@@ -1,5 +1,5 @@
-﻿@using SitiosPersonal.Repository.Repositories
-@inject MenuRepository MenuRepository
+﻿@using SitiosPersonal.Services.Services
+@inject MenuService MenuService
 
 @{
     var nombreUsuario = Context.Session.GetString("NombreCompleto");
@@ -7,7 +7,7 @@
     var idUsuario = Context.Session.GetInt32("IdUsuario");
     var menu = idUsuario == null
         ? new List<SitiosPersonal.Entities.Models.Pantalla>()
-        : MenuRepository.ObtenerMenuPorUsuario(idUsuario.Value);
+        : MenuService.ObtenerMenuPorUsuario(idUsuario.Value);
 }
 
 <!DOCTYPE html>
@@ -90,8 +90,8 @@
                             </div>
 
                             <a asp-page="/Login/Index"
-                               asp-page-handler="Logout"
-                               class="btn btn-outline-danger btn-sm">
+                                   asp-page-handler="Logout"
+                                   class="btn btn-outline-danger btn-sm">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Salir
                             </a>

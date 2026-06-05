@@ -2,18 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Entrevistas
 {
     public class CrearModel : PageModel
     {
-        private readonly EntrevistasRepository _repository;
+        private readonly EntrevistasService _repository;
         private readonly BitacoraService _bitacoraService;
 
         public CrearModel(
-            EntrevistasRepository repository,
+            EntrevistasService repository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -48,9 +48,9 @@ namespace SitiosPersonal.Pages.Entrevistas
 
             var entrevista = new Entrevista
             {
-                id_oferente               = Entrevista.id_oferente!.Value,
+                id_oferente = Entrevista.id_oferente!.Value,
                 id_empleado_entrevistador = Entrevista.id_empleado_entrevistador!.Value,
-                fecha_entrevista          = Entrevista.fecha_entrevista!.Value
+                fecha_entrevista = Entrevista.fecha_entrevista!.Value
             };
 
             int idEntrevista = _repository.Crear(entrevista);
@@ -75,8 +75,8 @@ namespace SitiosPersonal.Pages.Entrevistas
 
         private void CargarDropdowns()
         {
-            Entrevista.OferentesDisponibles  = _repository.ListarOferentes();
-            Entrevista.EmpleadosDisponibles  = _repository.ListarEmpleados();
+            Entrevista.OferentesDisponibles = _repository.ListarOferentes();
+            Entrevista.EmpleadosDisponibles = _repository.ListarEmpleados();
         }
     }
 }

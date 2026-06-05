@@ -65,21 +65,21 @@
                                 <td>@item.fecha_nacimiento.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <a asp-page="Editar"
-                                       asp-route-id="@item.id_oferente"
-                                       class="btn btn-primary btn-sm btn-icon"
-                                       title="Editar">
+                                           asp-route-id="@item.id_oferente"
+                                           class="btn btn-primary btn-sm btn-icon"
+                                           title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
 
                                     <a href="/Oferentes/PreparacionAcademica/@item.id_oferente"
-                                       class="btn btn-primary btn-sm btn-icon"
-                                       title="Preparación académica">
+                                           class="btn btn-primary btn-sm btn-icon"
+                                           title="Preparación académica">
                                         <i class="fas fa-graduation-cap"></i>
                                     </a>
 
                                     <a href="/Oferentes/ExperienciaLaboral/@item.id_oferente"
-                                       class="btn btn-primary btn-sm btn-icon"
-                                       title="Experiencia laboral">
+                                           class="btn btn-primary btn-sm btn-icon"
+                                           title="Experiencia laboral">
                                         <i class="fas fa-briefcase"></i>
                                     </a>
 
@@ -87,8 +87,7 @@
                                             class="btn btn-danger btn-sm btn-icon"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalEliminar"
-                                            data-id="@item.id_oferente"
->
+                                            data-id="@item.id_oferente">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -117,8 +116,8 @@
                     {
                         <li class="page-item @(numeroPagina == Model.Lista.Pagina ? "active" : "")">
                             <a class="page-link"
-                               asp-page="Index"
-                               asp-route-pagina="@numeroPagina">
+                                   asp-page="Index"
+                                   asp-route-pagina="@numeroPagina">
                                 @numeroPagina
                             </a>
                         </li>

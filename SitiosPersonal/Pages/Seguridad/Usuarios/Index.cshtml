@@ -9,48 +9,72 @@
         <a asp-page="Crear" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Nuevo</a>
     </div>
     <div class="card-body">
-        @if (TempData["Exito"] != null) { <div class="alert alert-success">@TempData["Exito"]</div> }
-        @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+        @if (TempData["Exito"] != null)
+        {
+            <div class="alert alert-success">@TempData["Exito"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead><tr><th style="width:80px;">ID</th><th>Usuario</th><th>Nombre completo</th><th>Correo</th><th>Estado</th><th style="width:210px;">Acciones</th></tr></thead>
                 <tbody>
-                @if (Model.Lista.Usuarios.Any())
-                {
-                    foreach (var item in Model.Lista.Usuarios)
+                    @if (Model.Lista.Usuarios.Any())
                     {
-                        <tr>
-                            <td>@item.id_usuario</td><td>@item.usuario</td><td>@item.nombre_completo</td><td>@item.correo</td>
-                            <td>
-                            @if (item.estado == "ACTIVO") { <span class="badge bg-success">ACTIVO</span> }
-                            else if (item.estado == "INACTIVO") { <span class="badge bg-secondary">INACTIVO</span> }
-                            else { <span class="badge bg-danger">BLOQUEADO</span> }
-                            </td>
-                            <td>
-                                <a asp-page="Editar" asp-route-id="@item.id_usuario" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
-                                <form asp-page-handler="CambiarEstado" asp-route-id="@item.id_usuario" method="post" class="d-inline"><button type="submit" class="btn btn-warning btn-sm btn-icon" title="Activar/Inactivar"><i class="fas fa-power-off"></i></button></form>
-                                <button type="button" class="btn btn-danger btn-sm btn-icon" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="@item.id_usuario" data-nombre="@item.usuario"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
+                        foreach (var item in Model.Lista.Usuarios)
+                        {
+                            <tr>
+                                <td>@item.id_usuario</td>
+                                <td>@item.usuario</td>
+                                <td>@item.nombre_completo</td>
+                                <td>@item.correo</td>
+                                <td>
+                                    @if (item.estado == "ACTIVO")
+                                    {
+                                        <span class="badge bg-success">ACTIVO</span>
+                                    }
+                                    else if (item.estado == "INACTIVO")
+                                    {
+
+                                        <span class="badge bg-secondary">INACTIVO</span>
+                                    }
+                                    else
+                                    {
+
+                                        <span class="badge bg-danger">BLOQUEADO</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-page="Editar" asp-route-id="@item.id_usuario" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
+                                    <form asp-page-handler="CambiarEstado" asp-route-id="@item.id_usuario" method="post" class="d-inline"><button type="submit" class="btn btn-warning btn-sm btn-icon" title="Activar/Inactivar"><i class="fas fa-power-off"></i></button></form>
+                                    <button type="button" class="btn btn-danger btn-sm btn-icon" data-bs-toggle="modal" data-bs-target="#modalEliminar" data-id="@item.id_usuario" data-nombre="@item.usuario"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        }
                     }
-                }
-                else
-                {
-                    <tr><td colspan="6" class="text-center text-muted">No se encontraron registros.</td></tr>
-                }
+                    else
+                    {
+                        <tr><td colspan="6" class="text-center text-muted">No se encontraron registros.</td></tr>
+                    }
                 </tbody>
             </table>
         </div>
         @if (Model.Lista.TotalPaginas > 1)
         {
-            <nav><ul class="pagination justify-content-center">
-            @for (int numeroPagina = 1; numeroPagina <= Model.Lista.TotalPaginas; numeroPagina++)
-            {
-                <li class="page-item @(numeroPagina == Model.Lista.Pagina ? "active" : "")"><a class="page-link" asp-page="Index" asp-route-pagina="@numeroPagina">@numeroPagina</a></li>
-            }
-            </ul></nav>
+            <nav>
+                <ul class="pagination justify-content-center">
+                    @for (int numeroPagina = 1; numeroPagina <= Model.Lista.TotalPaginas; numeroPagina++)
+                    {
+                        <li class="page-item @(numeroPagina == Model.Lista.Pagina ? "active" : "")"><a class="page-link" asp-page="Index" asp-route-pagina="@numeroPagina">@numeroPagina</a></li>
+                    }
+                </ul>
+            </nav>
         }
     </div>
 </div>
 <div class="modal fade" id="modalEliminar" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Confirmar eliminación</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body">¿Realmente desea eliminar el elemento seleccionado?<br /><strong id="nombreUsuarioEliminar"></strong></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button><form id="formEliminar" method="post"><button type="submit" class="btn btn-danger">Sí</button></form></div></div></div></div>
-@section Scripts {<script>const modalEliminar=document.getElementById('modalEliminar');modalEliminar.addEventListener('show.bs.modal',function(event){const button=event.relatedTarget;const id=button.getAttribute('data-id');const nombre=button.getAttribute('data-nombre');document.getElementById('nombreUsuarioEliminar').textContent=nombre;document.getElementById('formEliminar').action='/Seguridad/Usuarios?handler=Eliminar&id='+id;});</script>}
+@section Scripts {
+    <script>const modalEliminar=document.getElementById('modalEliminar');modalEliminar.addEventListener('show.bs.modal',function(event){const button=event.relatedTarget;const id=button.getAttribute('data-id');const nombre=button.getAttribute('data-nombre');document.getElementById('nombreUsuarioEliminar').textContent=nombre;document.getElementById('formEliminar').action='/Seguridad/Usuarios?handler=Eliminar&id='+id;});</script>
+}

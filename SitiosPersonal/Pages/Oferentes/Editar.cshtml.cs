@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 using System.Text.RegularExpressions;
 
@@ -10,10 +10,10 @@ namespace SitiosPersonal.Pages.Oferentes
 {
     public class EditarModel : PageModel
     {
-        private readonly OferentesRepository _repository;
+        private readonly OferentesService _repository;
         private readonly BitacoraService _bitacoraService;
 
-        public EditarModel(OferentesRepository repository, BitacoraService bitacoraService)
+        public EditarModel(OferentesService repository, BitacoraService bitacoraService)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;
@@ -38,18 +38,18 @@ namespace SitiosPersonal.Pages.Oferentes
 
             Oferente = new OferenteViewModel
             {
-                id_oferente         = oferente.id_oferente,
-                identificacion      = oferente.identificacion,
+                id_oferente = oferente.id_oferente,
+                identificacion = oferente.identificacion,
                 tipo_identificacion = oferente.tipo_identificacion,
-                nombre_completo     = oferente.nombre_completo,
-                fecha_nacimiento    = oferente.fecha_nacimiento,
-                Correos             = _repository.ObtenerCorreos(id),
-                Telefonos           = _repository.ObtenerTelefonos(id),
+                nombre_completo = oferente.nombre_completo,
+                fecha_nacimiento = oferente.fecha_nacimiento,
+                Correos = _repository.ObtenerCorreos(id),
+                Telefonos = _repository.ObtenerTelefonos(id),
                 ConcursosSeleccionados = _repository.ObtenerConcursos(id),
-                ConcursosDisponibles   = _repository.ListarConcursos()
+                ConcursosDisponibles = _repository.ListarConcursos()
             };
 
-            if (!Oferente.Correos.Any())   Oferente.Correos.Add("");
+            if (!Oferente.Correos.Any()) Oferente.Correos.Add("");
             if (!Oferente.Telefonos.Any()) Oferente.Telefonos.Add("");
 
             return Page();
@@ -72,8 +72,8 @@ namespace SitiosPersonal.Pages.Oferentes
                 return Page();
             }
 
-            var oferenteAnterior    = _repository.ObtenerPorId(id);
-            var correosAnteriores   = _repository.ObtenerCorreos(id);
+            var oferenteAnterior = _repository.ObtenerPorId(id);
+            var correosAnteriores = _repository.ObtenerCorreos(id);
             var telefonosAnteriores = _repository.ObtenerTelefonos(id);
             var concursosAnteriores = _repository.ObtenerConcursos(id);
 
@@ -84,14 +84,14 @@ namespace SitiosPersonal.Pages.Oferentes
 
             var oferenteActual = new Oferente
             {
-                id_oferente         = id,
-                identificacion      = Oferente.identificacion.Trim(),
+                id_oferente = id,
+                identificacion = Oferente.identificacion.Trim(),
                 tipo_identificacion = Oferente.tipo_identificacion,
-                nombre_completo     = Oferente.nombre_completo.Trim(),
-                fecha_nacimiento    = Oferente.fecha_nacimiento!.Value
+                nombre_completo = Oferente.nombre_completo.Trim(),
+                fecha_nacimiento = Oferente.fecha_nacimiento!.Value
             };
 
-            var correos   = Oferente.Correos.Where(c => !string.IsNullOrWhiteSpace(c)).Select(c => c.Trim()).ToList();
+            var correos = Oferente.Correos.Where(c => !string.IsNullOrWhiteSpace(c)).Select(c => c.Trim()).ToList();
             var telefonos = Oferente.Telefonos.Where(t => !string.IsNullOrWhiteSpace(t)).Select(t => t.Trim()).ToList();
 
             _repository.Actualizar(oferenteActual, correos, telefonos, Oferente.ConcursosSeleccionados);
@@ -105,7 +105,7 @@ namespace SitiosPersonal.Pages.Oferentes
                     oferenteAnterior.identificacion,
                     oferenteAnterior.tipo_identificacion,
                     oferenteAnterior.nombre_completo,
-                    correos   = correosAnteriores,
+                    correos = correosAnteriores,
                     telefonos = telefonosAnteriores,
                     concursos = concursosAnteriores
                 },

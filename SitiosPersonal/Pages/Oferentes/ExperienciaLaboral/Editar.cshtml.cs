@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
 {
     public class EditarModel : PageModel
     {
-        private readonly ExperienciaLaboralRepository _repository;
-        private readonly OferentesRepository _oferentesRepository;
+        private readonly ExperienciaLaboralService _repository;
+        private readonly OferentesService _oferentesRepository;
         private readonly BitacoraService _bitacoraService;
 
         public EditarModel(
-            ExperienciaLaboralRepository repository,
-            OferentesRepository oferentesRepository,
+            ExperienciaLaboralService repository,
+            OferentesService oferentesRepository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -44,12 +44,12 @@ namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
             Experiencia = new ExperienciaLaboralViewModel
             {
                 id_experiencia = experiencia.id_experiencia,
-                id_oferente    = idOferente,
+                id_oferente = idOferente,
                 NombreOferente = oferente?.nombre_completo ?? "",
-                empresa        = experiencia.empresa,
-                puesto         = experiencia.puesto,
-                fecha_inicio   = experiencia.fecha_inicio,
-                fecha_fin      = experiencia.fecha_fin
+                empresa = experiencia.empresa,
+                puesto = experiencia.puesto,
+                fecha_inicio = experiencia.fecha_inicio,
+                fecha_fin = experiencia.fecha_fin
             };
 
             return Page();
@@ -79,11 +79,11 @@ namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
             var actualizado = new Entities.Models.ExperienciaLaboral
             {
                 id_experiencia = id,
-                id_oferente    = idOferente,
-                empresa        = Experiencia.empresa.Trim(),
-                puesto         = Experiencia.puesto.Trim(),
-                fecha_inicio   = Experiencia.fecha_inicio!.Value,
-                fecha_fin      = Experiencia.fecha_fin!.Value
+                id_oferente = idOferente,
+                empresa = Experiencia.empresa.Trim(),
+                puesto = Experiencia.puesto.Trim(),
+                fecha_inicio = Experiencia.fecha_inicio!.Value,
+                fecha_fin = Experiencia.fecha_fin!.Value
             };
 
             _repository.Actualizar(actualizado);

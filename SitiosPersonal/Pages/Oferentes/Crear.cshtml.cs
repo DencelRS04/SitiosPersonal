@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 using System.Text.RegularExpressions;
 
@@ -10,10 +10,10 @@ namespace SitiosPersonal.Pages.Oferentes
 {
     public class CrearModel : PageModel
     {
-        private readonly OferentesRepository _repository;
+        private readonly OferentesService _repository;
         private readonly BitacoraService _bitacoraService;
 
-        public CrearModel(OferentesRepository repository, BitacoraService bitacoraService)
+        public CrearModel(OferentesService repository, BitacoraService bitacoraService)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;
@@ -53,13 +53,13 @@ namespace SitiosPersonal.Pages.Oferentes
 
             var oferente = new Oferente
             {
-                identificacion      = Oferente.identificacion.Trim(),
+                identificacion = Oferente.identificacion.Trim(),
                 tipo_identificacion = Oferente.tipo_identificacion,
-                nombre_completo     = Oferente.nombre_completo.Trim(),
-                fecha_nacimiento    = Oferente.fecha_nacimiento!.Value
+                nombre_completo = Oferente.nombre_completo.Trim(),
+                fecha_nacimiento = Oferente.fecha_nacimiento!.Value
             };
 
-            var correos   = Oferente.Correos.Where(c => !string.IsNullOrWhiteSpace(c)).Select(c => c.Trim()).ToList();
+            var correos = Oferente.Correos.Where(c => !string.IsNullOrWhiteSpace(c)).Select(c => c.Trim()).ToList();
             var telefonos = Oferente.Telefonos.Where(t => !string.IsNullOrWhiteSpace(t)).Select(t => t.Trim()).ToList();
 
             int idOferente = _repository.Crear(oferente, correos, telefonos, Oferente.ConcursosSeleccionados);

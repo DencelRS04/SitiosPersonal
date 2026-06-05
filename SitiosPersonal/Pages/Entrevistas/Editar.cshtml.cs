@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Entrevistas
 {
     public class EditarModel : PageModel
     {
-        private readonly EntrevistasRepository _repository;
-        private readonly OferentesRepository _oferentesRepository;
+        private readonly EntrevistasService _repository;
+        private readonly OferentesService _oferentesRepository;
         private readonly BitacoraService _bitacoraService;
 
         public EditarModel(
-            EntrevistasRepository repository,
-            OferentesRepository oferentesRepository,
+            EntrevistasService repository,
+            OferentesService oferentesRepository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -43,13 +43,13 @@ namespace SitiosPersonal.Pages.Entrevistas
 
             Entrevista = new EntrevistaViewModel
             {
-                id_entrevista             = entrevista.id_entrevista,
-                id_oferente               = entrevista.id_oferente,
-                NombreOferente            = oferente?.nombre_completo ?? "",
+                id_entrevista = entrevista.id_entrevista,
+                id_oferente = entrevista.id_oferente,
+                NombreOferente = oferente?.nombre_completo ?? "",
                 id_empleado_entrevistador = entrevista.id_empleado_entrevistador,
-                fecha_entrevista          = entrevista.fecha_entrevista,
-                estado                    = entrevista.estado,
-                EmpleadosDisponibles      = _repository.ListarEmpleados()
+                fecha_entrevista = entrevista.fecha_entrevista,
+                estado = entrevista.estado,
+                EmpleadosDisponibles = _repository.ListarEmpleados()
             };
 
             return Page();
@@ -83,10 +83,10 @@ namespace SitiosPersonal.Pages.Entrevistas
 
             var actualizado = new Entities.Models.Entrevista
             {
-                id_entrevista             = id,
-                id_oferente               = anterior.id_oferente,
+                id_entrevista = id,
+                id_oferente = anterior.id_oferente,
                 id_empleado_entrevistador = Entrevista.id_empleado_entrevistador!.Value,
-                fecha_entrevista          = Entrevista.fecha_entrevista!.Value
+                fecha_entrevista = Entrevista.fecha_entrevista!.Value
             };
 
             _repository.Actualizar(actualizado);

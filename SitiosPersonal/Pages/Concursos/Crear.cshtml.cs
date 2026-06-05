@@ -2,17 +2,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Concursos
 {
     public class CrearModel : PageModel
     {
-        private readonly ConcursosRepository _repository;
+        private readonly ConcursosService _repository;
         private readonly BitacoraService _bitacoraService;
 
-        public CrearModel(ConcursosRepository repository, BitacoraService bitacoraService)
+        public CrearModel(ConcursosService repository, BitacoraService bitacoraService)
         {
             _repository = repository;
             _bitacoraService = bitacoraService;
@@ -55,11 +55,11 @@ namespace SitiosPersonal.Pages.Concursos
 
             var concurso = new Concurso
             {
-                codigo       = Concurso.codigo.Trim(),
-                nombre       = Concurso.nombre.Trim(),
+                codigo = Concurso.codigo.Trim(),
+                nombre = Concurso.nombre.Trim(),
                 fecha_inicio = Concurso.fecha_inicio!.Value,
-                fecha_fin    = Concurso.fecha_fin!.Value,
-                estado       = Concurso.estado
+                fecha_fin = Concurso.fecha_fin!.Value,
+                estado = Concurso.estado
             };
 
             int idConcurso = _repository.Crear(concurso);

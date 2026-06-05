@@ -1,20 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
 {
     public class IndexModel : PageModel
     {
-        private readonly PreparacionAcademicaRepository _repository;
-        private readonly OferentesRepository _oferentesRepository;
+        private readonly PreparacionAcademicaService _repository;
+        private readonly OferentesService _oferentesRepository;
         private readonly BitacoraService _bitacoraService;
 
         public IndexModel(
-            PreparacionAcademicaRepository repository,
-            OferentesRepository oferentesRepository,
+            PreparacionAcademicaService repository,
+            OferentesService oferentesRepository,
             BitacoraService bitacoraService)
         {
             _repository = repository;
@@ -42,9 +41,9 @@ namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
 
             Lista = new PreparacionAcademicaListaViewModel
             {
-                id_oferente    = idOferente,
+                id_oferente = idOferente,
                 NombreOferente = oferente.nombre_completo,
-                Registros      = _repository.ListarPorOferente(idOferente)
+                Registros = _repository.ListarPorOferente(idOferente)
             };
 
             _bitacoraService.RegistrarConsulta(idUsuario, $"PreparacionAcademica (Oferente {idOferente})");

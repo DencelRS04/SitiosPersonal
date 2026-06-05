@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Helpers;
 
 namespace SitiosPersonal.Pages.Login
 {
     public class IndexModel : PageModel
     {
-        private readonly LoginRepository _repository;
+        private readonly LoginService _repository;
         private readonly EncryptionHelper _encryptionHelper;
 
         public IndexModel(
-            LoginRepository repository,
+            LoginService repository,
             EncryptionHelper encryptionHelper)
         {
             _repository = repository;
