@@ -43,9 +43,17 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
 
             string passwordDesencriptado = string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(usuario.password_hash))
+            if (!string.IsNullOrWhiteSpace(usuario.password_hash) &&
+                usuario.password_hash.StartsWith("AESGCM:"))
             {
-                passwordDesencriptado = _encryptionHelper.Desencriptar(usuario.password_hash);
+                try
+                {
+                    passwordDesencriptado = _encryptionHelper.Desencriptar(usuario.password_hash);
+                }
+                catch
+                {
+                    passwordDesencriptado = string.Empty;
+                }
             }
 
             Usuario = new UsuarioViewModel
