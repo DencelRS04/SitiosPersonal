@@ -25,6 +25,21 @@ builder.Services.AddRazorPages(options =>
     {
         model.Filters.Add(new ServiceFilterAttribute(typeof(PermisoPageFilter)));
     });
+
+    options.Conventions.AddFolderApplicationModelConvention("/Oferentes", model =>
+    {
+        model.Filters.Add(new ServiceFilterAttribute(typeof(PermisoPageFilter)));
+    });
+
+    options.Conventions.AddFolderApplicationModelConvention("/Concursos", model =>
+    {
+        model.Filters.Add(new ServiceFilterAttribute(typeof(PermisoPageFilter)));
+    });
+
+    options.Conventions.AddFolderApplicationModelConvention("/Entrevistas", model =>
+    {
+        model.Filters.Add(new ServiceFilterAttribute(typeof(PermisoPageFilter)));
+    });
 });
 
 builder.Services.AddSingleton<DbContext>();
@@ -36,6 +51,11 @@ builder.Services.AddScoped<RolesRepository>();
 builder.Services.AddScoped<PantallasRepository>();
 builder.Services.AddScoped<UsuariosRepository>();
 builder.Services.AddScoped<PermisosRepository>();
+builder.Services.AddScoped<OferentesRepository>();
+builder.Services.AddScoped<ConcursosRepository>();
+builder.Services.AddScoped<PreparacionAcademicaRepository>();
+builder.Services.AddScoped<ExperienciaLaboralRepository>();
+builder.Services.AddScoped<EntrevistasRepository>();
 
 builder.Services.AddScoped<SessionPageFilter>();
 builder.Services.AddScoped<PermisoPageFilter>();

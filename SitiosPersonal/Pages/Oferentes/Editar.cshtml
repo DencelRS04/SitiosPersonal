@@ -1,0 +1,203 @@
+@page "/Oferentes/Editar/{id:int}"
+@model SitiosPersonal.Pages.Oferentes.EditarModel
+
+@{
+    ViewData["Title"] = "Formulario Oferente";
+}
+
+<form method="post">
+
+    <div class="form-action-panel">
+        <a asp-page="Index" class="action-circle" title="Regresar">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
+
+        <a href="/Oferentes/PreparacionAcademica/@Model.Oferente.id_oferente"
+           class="action-circle" title="Preparación académica">
+            <i class="fas fa-graduation-cap"></i>
+        </a>
+
+        <a href="/Oferentes/ExperienciaLaboral/@Model.Oferente.id_oferente"
+           class="action-circle" title="Experiencia laboral">
+            <i class="fas fa-briefcase"></i>
+        </a>
+    </div>
+
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Formulario Oferente</h4>
+        </div>
+
+        <div class="card-body">
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+
+            <input type="hidden" asp-for="Oferente.id_oferente" />
+
+            <h5 class="form-section-title">Datos básicos</h5>
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Identificación <span class="text-danger">*</span></label>
+                    <input asp-for="Oferente.identificacion" class="form-control" maxlength="30" />
+                    <span asp-validation-for="Oferente.identificacion" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Tipo de identificación <span class="text-danger">*</span></label>
+                    <select asp-for="Oferente.tipo_identificacion" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                        <option value="CEDULA">Cédula de identidad</option>
+                        <option value="DIMEX">DIMEX</option>
+                        <option value="PASAPORTE">Pasaporte</option>
+                    </select>
+                    <span asp-validation-for="Oferente.tipo_identificacion" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Fecha de nacimiento <span class="text-danger">*</span></label>
+                    <input asp-for="Oferente.fecha_nacimiento" type="date" class="form-control" />
+                    <span asp-validation-for="Oferente.fecha_nacimiento" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Nombre completo <span class="text-danger">*</span></label>
+                    <input asp-for="Oferente.nombre_completo" class="form-control" maxlength="150" />
+                    <span asp-validation-for="Oferente.nombre_completo" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <h5 class="form-section-title">Correos electrónicos</h5>
+            <div id="correosContainer">
+                @for (int i = 0; i < Model.Oferente.Correos.Count; i++)
+                {
+                    <div class="input-group mb-2 correo-row">
+                        <input type="email"
+                               name="Oferente.Correos"
+                               value="@Model.Oferente.Correos[i]"
+                               class="form-control"
+                               placeholder="correo@ejemplo.com"
+                               maxlength="150" />
+                        <button type="button" class="btn btn-outline-danger btn-quitar-correo">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+            <button type="button" id="btnAgregarCorreo" class="btn btn-outline-secondary btn-sm mb-3">
+                <i class="fas fa-plus"></i> Agregar correo
+            </button>
+
+            <h5 class="form-section-title">Teléfonos de contacto</h5>
+            <div id="telefonosContainer">
+                @for (int i = 0; i < Model.Oferente.Telefonos.Count; i++)
+                {
+                    <div class="input-group mb-2 telefono-row">
+                        <input type="tel"
+                               name="Oferente.Telefonos"
+                               value="@Model.Oferente.Telefonos[i]"
+                               class="form-control"
+                               placeholder="8888-0000"
+                               maxlength="20" />
+                        <button type="button" class="btn btn-outline-danger btn-quitar-telefono">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+            <button type="button" id="btnAgregarTelefono" class="btn btn-outline-secondary btn-sm mb-3">
+                <i class="fas fa-plus"></i> Agregar teléfono
+            </button>
+
+            <h5 class="form-section-title">Concursos en los que participa</h5>
+            <div class="row">
+                @foreach (var concurso in Model.Oferente.ConcursosDisponibles)
+                {
+                    bool seleccionado = Model.Oferente.ConcursosSeleccionados.Contains(concurso.id_concurso);
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   name="Oferente.ConcursosSeleccionados"
+                                   value="@concurso.id_concurso"
+                                   class="form-check-input"
+                                   checked="@seleccionado" />
+                            <label class="form-check-label">
+                                [@concurso.codigo] @concurso.nombre
+                                <span class="badge @(concurso.estado == "VIGENTE" ? "bg-success" : "bg-secondary") ms-1">
+                                    @concurso.estado
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('btnAgregarCorreo').addEventListener('click', function () {
+            const container = document.getElementById('correosContainer');
+            const div = document.createElement('div');
+            div.className = 'input-group mb-2 correo-row';
+            div.innerHTML = `
+                <input type="email" name="Oferente.Correos" class="form-control"
+                       placeholder="correo@ejemplo.com" maxlength="150" />
+                <button type="button" class="btn btn-outline-danger btn-quitar-correo">
+                    <i class="fas fa-minus"></i>
+                </button>`;
+            container.appendChild(div);
+            vincularQuitarCorreos();
+        });
+
+        document.getElementById('btnAgregarTelefono').addEventListener('click', function () {
+            const container = document.getElementById('telefonosContainer');
+            const div = document.createElement('div');
+            div.className = 'input-group mb-2 telefono-row';
+            div.innerHTML = `
+                <input type="tel" name="Oferente.Telefonos" class="form-control"
+                       placeholder="8888-0000" maxlength="20" />
+                <button type="button" class="btn btn-outline-danger btn-quitar-telefono">
+                    <i class="fas fa-minus"></i>
+                </button>`;
+            container.appendChild(div);
+            vincularQuitarTelefonos();
+        });
+
+        function vincularQuitarCorreos() {
+            document.querySelectorAll('.btn-quitar-correo').forEach(function (btn) {
+                btn.onclick = function () {
+                    if (document.querySelectorAll('.correo-row').length > 1) {
+                        btn.closest('.correo-row').remove();
+                    }
+                };
+            });
+        }
+
+        function vincularQuitarTelefonos() {
+            document.querySelectorAll('.btn-quitar-telefono').forEach(function (btn) {
+                btn.onclick = function () {
+                    if (document.querySelectorAll('.telefono-row').length > 1) {
+                        btn.closest('.telefono-row').remove();
+                    }
+                };
+            });
+        }
+
+        vincularQuitarCorreos();
+        vincularQuitarTelefonos();
+    </script>
+}

@@ -1,0 +1,146 @@
+@page "/Oferentes/PreparacionAcademica/{idOferente:int}"
+@model SitiosPersonal.Pages.Oferentes.PreparacionAcademica.IndexModel
+
+@{
+    ViewData["Title"] = "Preparación Académica";
+}
+
+<div class="crud-card card">
+
+    <div class="crud-card-header d-flex justify-content-between align-items-center">
+
+        <div>
+            <h4 class="crud-card-title mb-0">
+                <i class=""></i>
+                Preparación Académica
+            </h4>
+            <small class="text-white-50">@Model.Lista.NombreOferente</small>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="/Oferentes/Editar/@Model.Lista.id_oferente"
+               class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i>
+                Volver al oferente
+            </a>
+
+            <a asp-page="Crear"
+               asp-route-idOferente="@Model.Lista.id_oferente"
+               class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i>
+                Nuevo
+            </a>
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        @if (TempData["Exito"] != null)
+        {
+            <div class="alert alert-success">@TempData["Exito"]</div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover">
+
+                <thead>
+                    <tr>
+                        <th>Institución</th>
+                        <th>Título obtenido</th>
+                        <th style="width:130px;">Fecha inicio</th>
+                        <th style="width:130px;">Fecha fin</th>
+                        <th style="width:120px;">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.Lista.Registros.Any())
+                    {
+                        foreach (var item in Model.Lista.Registros)
+                        {
+                            <tr>
+                                <td>@item.NombreInstitucion</td>
+                                <td>@item.titulo</td>
+                                <td>@item.fecha_inicio.ToString("dd/MM/yyyy")</td>
+                                <td>@item.fecha_fin.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <a asp-page="Editar"
+                                       asp-route-idOferente="@item.id_oferente"
+                                       asp-route-id="@item.id_preparacion"
+                                       class="btn btn-primary btn-sm btn-icon">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm btn-icon"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEliminar"
+                                            data-id="@item.id_preparacion"
+                                            data-titulo="@item.titulo">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                No se encontraron registros.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Realmente desea eliminar el registro seleccionado?
+                <br />
+                <strong id="tituloEliminar"></strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <form id="formEliminar" method="post">
+                    <button type="submit" class="btn btn-danger">Sí</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const modalEliminar = document.getElementById('modalEliminar');
+        modalEliminar.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+            const titulo = button.getAttribute('data-titulo');
+
+            document.getElementById('tituloEliminar').textContent = titulo;
+            document.getElementById('formEliminar').action =
+                '/Oferentes/PreparacionAcademica/@Model.Lista.id_oferente?handler=Eliminar&id=' + id;
+        });
+    </script>
+}
