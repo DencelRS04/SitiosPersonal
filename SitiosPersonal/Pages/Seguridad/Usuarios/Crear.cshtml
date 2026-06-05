@@ -3,25 +3,94 @@
 @{
     ViewData["Title"] = "Formulario Usuario";
 }
-<form method="post">
-    <div class="form-action-panel"><a asp-page="Index" class="action-circle" title="Regresar"><i class="fas fa-arrow-left"></i></a><button type="submit" class="action-circle" title="Guardar"><i class="fas fa-save"></i></button></div>
+
+<form method="post" autocomplete="off">
+    <div class="form-action-panel">
+        <a asp-page="Index" class="action-circle" title="Regresar">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
+
     <div class="form-card card">
-        <div class="crud-card-header"><h4 class="crud-card-title">Formulario Usuario</h4></div><div class="card-body">
-        
-        <div class="mb-3"><label class="form-label">Nombre de usuario</label><input asp-for="Usuario.usuario" class="form-control" /><span asp-validation-for="Usuario.usuario" class="text-danger"></span></div>
-        <div class="mb-3"><label class="form-label">Nombre completo</label><input asp-for="Usuario.nombre_completo" class="form-control" /><span asp-validation-for="Usuario.nombre_completo" class="text-danger"></span></div>
-        <div class="mb-3"><label class="form-label">Correo</label><input asp-for="Usuario.correo" class="form-control" /><span asp-validation-for="Usuario.correo" class="text-danger"></span></div>
-        <div class="mb-3"><label class="form-label">Contraseña</label><input asp-for="Usuario.password" type="password" class="form-control" /><span asp-validation-for="Usuario.password" class="text-danger"></span></div>
-        <div class="mb-3"><label class="form-label">Estado</label><select asp-for="Usuario.estado" class="form-select"><option value="ACTIVO">ACTIVO</option><option value="INACTIVO">INACTIVO</option><option value="BLOQUEADO">BLOQUEADO</option></select><span asp-validation-for="Usuario.estado" class="text-danger"></span></div>
-        <div class="mb-4">
-            <h5 class="form-section-title">Roles asociados</h5><div class="row">
-            @foreach (var rol in Model.Usuario.RolesDisponibles)
-            {
-                bool seleccionado = false;
-                <div class="col-md-4 mb-2"><div class="form-check"><input type="checkbox" name="Usuario.RolesSeleccionados" value="@rol.id_rol" class="form-check-input" checked="@seleccionado" /><label class="form-check-label">@rol.nombre</label></div></div>
-            }
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Formulario Usuario</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="mb-3">
+                <label class="form-label">Nombre de usuario</label>
+                <input asp-for="Usuario.usuario"
+                       class="form-control"
+                       autocomplete="off" />
+                <span asp-validation-for="Usuario.usuario" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre completo</label>
+                <input asp-for="Usuario.nombre_completo"
+                       class="form-control"
+                       autocomplete="off" />
+                <span asp-validation-for="Usuario.nombre_completo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input asp-for="Usuario.correo"
+                       class="form-control"
+                       autocomplete="off" />
+                <span asp-validation-for="Usuario.correo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input asp-for="Usuario.password"
+                       type="password"
+                       class="form-control"
+                       autocomplete="new-password"
+                       value="" />
+                <span asp-validation-for="Usuario.password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <select asp-for="Usuario.estado" class="form-select">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="INACTIVO">INACTIVO</option>
+                    <option value="BLOQUEADO">BLOQUEADO</option>
+                </select>
+                <span asp-validation-for="Usuario.estado" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <h5 class="form-section-title">Roles asociados</h5>
+
+                <div class="row">
+                    @foreach (var rol in Model.Usuario.RolesDisponibles)
+                    {
+                        <div class="col-md-4 mb-2">
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       name="Usuario.RolesSeleccionados"
+                                       value="@rol.id_rol"
+                                       class="form-check-input"
+                                       id="rol_@rol.id_rol" />
+
+                                <label class="form-check-label" for="rol_@rol.id_rol">
+                                    @rol.nombre
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <span asp-validation-for="Usuario.RolesSeleccionados" class="text-danger"></span>
+            </div>
+
         </div>
     </div>
-</div>
-</div>
 </form>
