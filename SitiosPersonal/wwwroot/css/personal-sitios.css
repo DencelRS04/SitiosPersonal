@@ -14,6 +14,31 @@
     font-weight: 600;
 }
 
+.sidebar-logo-layout {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    background-color: #ffffff;
+    padding: 3px;
+}
+.sidebar-logo-home {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 50%;
+    background-color: #ffffff;
+    padding: 3px;
+}
+
+.sidebar-logo-login {
+    width: 105px;
+    height: 105px;
+    object-fit: cover;
+    border-radius: 50%;
+    background-color: #ffffff;
+    padding: 3px;
+}
 .sidebar-subtitle {
     font-size: 12px;
     color: #cbd5e1;
