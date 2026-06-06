@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
 using SitiosPersonal.Services.Services;
-using SitiosPersonal.Services.Services;
 using System.Text.RegularExpressions;
 
 namespace SitiosPersonal.Pages.Oferentes

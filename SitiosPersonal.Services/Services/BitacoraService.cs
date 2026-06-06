@@ -1,4 +1,4 @@
-﻿using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Repository.Repositories;
 using System.Text.Json;
 
 namespace SitiosPersonal.Services.Services

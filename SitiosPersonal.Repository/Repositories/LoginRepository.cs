@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using SitiosPersonal.Repository.Data;
 using SitiosPersonal.Entities.Models;
 

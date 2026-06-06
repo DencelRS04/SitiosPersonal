@@ -1,4 +1,4 @@
-﻿using SitiosPersonal.Entities.Models;
+using SitiosPersonal.Entities.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace SitiosPersonal.Entities.ViewModels

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SitiosPersonal.Filters;
 using SitiosPersonal.Services;
 
