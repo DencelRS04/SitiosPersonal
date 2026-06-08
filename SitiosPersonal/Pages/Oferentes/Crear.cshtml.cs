@@ -37,7 +37,9 @@ namespace SitiosPersonal.Pages.Oferentes
         {
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            if (!ModelState.IsValid || !ValidarCamposMultiples())
+            bool modelValido = ModelState.IsValid;
+            bool camposValidos = ValidarCamposMultiples();
+            if (!modelValido || !camposValidos)
             {
                 Oferente.ConcursosDisponibles = _repository.ListarConcursos();
                 return Page();
@@ -45,7 +47,7 @@ namespace SitiosPersonal.Pages.Oferentes
 
             if (_repository.ExisteIdentificacion(Oferente.identificacion))
             {
-                TempData["Error"] = "El número de identificación ya está registrado en el sistema.";
+                ModelState.AddModelError("Oferente.identificacion", "El número de identificación debe ser único en el sistema.");
                 Oferente.ConcursosDisponibles = _repository.ListarConcursos();
                 return Page();
             }
@@ -92,7 +94,7 @@ namespace SitiosPersonal.Pages.Oferentes
 
             if (!correosValidos.Any())
             {
-                ModelState.AddModelError("", "Debe ingresar al menos un correo electrónico.");
+                ModelState.AddModelError("Oferente.Correos", "Debe ingresar al menos un correo electrónico.");
                 valido = false;
             }
             else
@@ -113,13 +115,13 @@ namespace SitiosPersonal.Pages.Oferentes
 
             if (!telefonosValidos.Any())
             {
-                ModelState.AddModelError("", "Debe ingresar al menos un teléfono de contacto.");
+                ModelState.AddModelError("Oferente.Telefonos", "Debe ingresar al menos un teléfono de contacto.");
                 valido = false;
             }
 
             if (Oferente.ConcursosSeleccionados == null || !Oferente.ConcursosSeleccionados.Any())
             {
-                ModelState.AddModelError("", "Debe seleccionar al menos un concurso.");
+                ModelState.AddModelError("Oferente.ConcursosSeleccionados", "Debe seleccionar al menos un concurso.");
                 valido = false;
             }
 
