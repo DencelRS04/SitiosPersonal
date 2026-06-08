@@ -49,7 +49,8 @@ namespace SitiosPersonal.Pages.Entrevistas
             {
                 id_oferente = Entrevista.id_oferente!.Value,
                 id_empleado_entrevistador = Entrevista.id_empleado_entrevistador!.Value,
-                fecha_entrevista = Entrevista.fecha_entrevista!.Value
+                fecha_entrevista = Entrevista.fecha_entrevista!.Value,
+                hora_entrevista = Entrevista.hora_entrevista!.Value
             };
 
             int idEntrevista = _repository.Crear(entrevista);
@@ -64,6 +65,7 @@ namespace SitiosPersonal.Pages.Entrevistas
                     entrevista.id_oferente,
                     entrevista.id_empleado_entrevistador,
                     entrevista.fecha_entrevista,
+                    entrevista.hora_entrevista,
                     estado = "PENDIENTE"
                 }
             );

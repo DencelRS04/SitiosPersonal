@@ -33,6 +33,8 @@ namespace SitiosPersonal.Entities.ViewModels
 
         public DateTime fecha_entrevista { get; set; }
 
+        public TimeSpan hora_entrevista { get; set; }
+
         public string estado { get; set; }
     }
 }
