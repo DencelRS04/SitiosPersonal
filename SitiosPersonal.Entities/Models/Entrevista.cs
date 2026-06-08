@@ -10,6 +10,8 @@ namespace SitiosPersonal.Entities.Models
 
         public DateTime fecha_entrevista { get; set; }
 
+        public TimeSpan hora_entrevista { get; set; }
+
         public string estado { get; set; }
 
         public string observacion { get; set; }

@@ -15,6 +15,9 @@ namespace SitiosPersonal.Entities.ViewModels
         [Required(ErrorMessage = "La fecha de la entrevista es obligatoria")]
         public DateTime? fecha_entrevista { get; set; }
 
+        [Required(ErrorMessage = "La hora de la entrevista es obligatoria")]
+        public TimeSpan? hora_entrevista { get; set; }
+
         public string estado { get; set; } = "PENDIENTE";
 
         // Datos de solo lectura para mostrar en Editar (no se envía en el POST)

@@ -47,6 +47,7 @@ namespace SitiosPersonal.Pages.Entrevistas
                 NombreOferente = oferente?.nombre_completo ?? "",
                 id_empleado_entrevistador = entrevista.id_empleado_entrevistador,
                 fecha_entrevista = entrevista.fecha_entrevista,
+                hora_entrevista = entrevista.hora_entrevista,
                 estado = entrevista.estado,
                 EmpleadosDisponibles = _repository.ListarEmpleados()
             };
@@ -85,7 +86,8 @@ namespace SitiosPersonal.Pages.Entrevistas
                 id_entrevista = id,
                 id_oferente = anterior.id_oferente,
                 id_empleado_entrevistador = Entrevista.id_empleado_entrevistador!.Value,
-                fecha_entrevista = Entrevista.fecha_entrevista!.Value
+                fecha_entrevista = Entrevista.fecha_entrevista!.Value,
+                hora_entrevista = Entrevista.hora_entrevista!.Value
             };
 
             _repository.Actualizar(actualizado);
@@ -98,14 +100,16 @@ namespace SitiosPersonal.Pages.Entrevistas
                     anterior.id_entrevista,
                     anterior.id_oferente,
                     anterior.id_empleado_entrevistador,
-                    anterior.fecha_entrevista
+                    anterior.fecha_entrevista,
+                    anterior.hora_entrevista
                 },
                 new
                 {
                     actualizado.id_entrevista,
                     actualizado.id_oferente,
                     actualizado.id_empleado_entrevistador,
-                    actualizado.fecha_entrevista
+                    actualizado.fecha_entrevista,
+                    actualizado.hora_entrevista
                 }
             );
 

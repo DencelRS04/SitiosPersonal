@@ -28,6 +28,7 @@ namespace SitiosPersonal.Repository.Repositories
                     emp_ofe.nombre_completo AS NombreEmpleado,
                     emp.numero_empleado  AS NumeroEmpleado,
                     e.fecha_entrevista,
+                    e.hora_entrevista,
                     e.estado
                 FROM entrevista e
                 INNER JOIN oferente ofe       ON ofe.id_oferente = e.id_oferente
@@ -54,7 +55,7 @@ namespace SitiosPersonal.Repository.Repositories
 
             string sql = @"
                 SELECT id_entrevista, id_oferente, id_empleado_entrevistador,
-                       fecha_entrevista, estado, observacion, fecha_creacion
+                       fecha_entrevista, hora_entrevista, estado, observacion, fecha_creacion
                 FROM entrevista
                 WHERE id_entrevista = @id_entrevista;";
 
@@ -91,8 +92,8 @@ namespace SitiosPersonal.Repository.Repositories
             using var connection = _context.CreateConnection();
 
             string sql = @"
-                INSERT INTO entrevista(id_oferente, id_empleado_entrevistador, fecha_entrevista, estado)
-                VALUES(@id_oferente, @id_empleado_entrevistador, @fecha_entrevista, 'PENDIENTE');
+                INSERT INTO entrevista(id_oferente, id_empleado_entrevistador, fecha_entrevista, hora_entrevista, estado)
+                VALUES(@id_oferente, @id_empleado_entrevistador, @fecha_entrevista, @hora_entrevista, 'PENDIENTE');
                 SELECT LAST_INSERT_ID();";
 
             return connection.ExecuteScalar<int>(sql, entrevista);
@@ -105,7 +106,8 @@ namespace SitiosPersonal.Repository.Repositories
             string sql = @"
                 UPDATE entrevista
                 SET id_empleado_entrevistador = @id_empleado_entrevistador,
-                    fecha_entrevista          = @fecha_entrevista
+                    fecha_entrevista          = @fecha_entrevista,
+                    hora_entrevista           = @hora_entrevista
                 WHERE id_entrevista = @id_entrevista;";
 
             connection.Execute(sql, entrevista);
