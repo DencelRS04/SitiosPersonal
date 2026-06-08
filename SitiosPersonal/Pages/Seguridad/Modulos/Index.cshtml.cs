@@ -20,6 +20,8 @@ namespace SitiosPersonal.Pages.Seguridad.Modulos
 
         public PantallasListaViewModel Lista { get; set; } = new PantallasListaViewModel();
 
+        public PantallasListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int pagina = 1)
         {
             var resultado = ValidarAcceso(); if (resultado != null) return resultado;

@@ -23,6 +23,8 @@ namespace SitiosPersonal.Pages.Oferentes
 
         public OferentesListaViewModel Lista { get; set; } = new OferentesListaViewModel();
 
+        public OferentesListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int pagina = 1)
         {
             var resultado = ValidarAcceso();

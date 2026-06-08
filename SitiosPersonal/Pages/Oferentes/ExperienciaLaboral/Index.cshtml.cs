@@ -23,6 +23,8 @@ namespace SitiosPersonal.Pages.Oferentes.ExperienciaLaboral
 
         public ExperienciaLaboralListaViewModel Lista { get; set; } = new ExperienciaLaboralListaViewModel();
 
+        public ExperienciaLaboralListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int idOferente)
         {
             if (HttpContext.Session.GetInt32("IdUsuario") == null)

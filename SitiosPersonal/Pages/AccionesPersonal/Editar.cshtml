@@ -1,0 +1,74 @@
+@page "{id:int}"
+@model SitiosPersonal.Pages.AccionesPersonal.EditarModel
+@{
+    ViewData["Title"] = "Editar Acción de Personal";
+}
+
+<div class="page-header">
+    <div>
+        <a asp-page="Index" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-arrow-left"></i></a>
+        <strong>Editar Acción de Personal</strong>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title mb-4 text-danger"><i class="fas fa-edit me-2"></i>Formulario Acción de Personal</h5>
+        <form method="post">
+            <input type="hidden" asp-for="Input.id_accion" />
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Código</label>
+                    <input type="text" class="form-control bg-light" value="@Model.Input.codigo" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Input.fecha_accion" class="form-label fw-semibold">Fecha de la Acción *</label>
+                    <input asp-for="Input.fecha_accion" type="date" class="form-control"
+                           value="@Model.Input.fecha_accion?.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="Input.fecha_accion" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.id_empleado" class="form-label fw-semibold">Empleado *</label>
+                    <select asp-for="Input.id_empleado" class="form-select"
+                            asp-items="@(new SelectList(Model.EmpleadosDisponibles, "id_empleado", "nombre_completo"))">
+                        <option value="">-- Seleccione empleado --</option>
+                    </select>
+                    <span asp-validation-for="Input.id_empleado" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Input.id_empleado_jefatura" class="form-label fw-semibold">Jefatura que Aprueba *</label>
+                    <select asp-for="Input.id_empleado_jefatura" class="form-select"
+                            asp-items="@(new SelectList(Model.EmpleadosDisponibles, "id_empleado", "nombre_completo"))">
+                        <option value="">-- Seleccione jefatura --</option>
+                    </select>
+                    <span asp-validation-for="Input.id_empleado_jefatura" class="text-danger small"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Input.descripcion" class="form-label fw-semibold">Descripción * (máx. 500 caracteres)</label>
+                    <textarea asp-for="Input.descripcion" class="form-control" rows="4"
+                              maxlength="500" id="txtDescripcion"></textarea>
+                    <div class="d-flex justify-content-end">
+                        <small class="text-muted"><span id="charCount">0</span>/500</small>
+                    </div>
+                    <span asp-validation-for="Input.descripcion" class="text-danger small"></span>
+                </div>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mt-3"></div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Guardar</button>
+                <a asp-page="Index" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const txt = document.getElementById('txtDescripcion');
+        const counter = document.getElementById('charCount');
+        function updateCount() { counter.textContent = txt.value.length; }
+        txt.addEventListener('input', updateCount);
+        updateCount();
+    </script>
+}

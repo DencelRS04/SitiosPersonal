@@ -16,6 +16,8 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
 
         public UsuariosListaViewModel Lista { get; set; } = new UsuariosListaViewModel();
 
+        public UsuariosListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int pagina = 1)
         {
             var resultado = ValidarAcceso(); if (resultado != null) return resultado;

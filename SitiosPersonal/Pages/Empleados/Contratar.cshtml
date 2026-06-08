@@ -1,0 +1,64 @@
+@page
+@model SitiosPersonal.Pages.Empleados.ContratarModel
+@{
+    ViewData["Title"] = "Contratar Empleado";
+}
+
+<div class="page-header">
+    <div>
+        <a asp-page="Index" class="btn btn-outline-secondary btn-sm me-2">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <strong>Contratar Empleado</strong>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title mb-4 text-danger">
+            <i class="fas fa-user-plus me-2"></i>Formulario de Contratación
+        </h5>
+
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Input.id_oferente" class="form-label fw-semibold">Oferente *</label>
+                    <select asp-for="Input.id_oferente" class="form-select"
+                            asp-items="@(new SelectList(Model.OferentesDisponibles, "id_oferente", "nombre_completo"))">
+                        <option value="">-- Seleccione un oferente --</option>
+                    </select>
+                    <span asp-validation-for="Input.id_oferente" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Input.id_puesto" class="form-label fw-semibold">Puesto *</label>
+                    <select asp-for="Input.id_puesto" class="form-select"
+                            asp-items="@(new SelectList(Model.PuestosDisponibles, "id_puesto", "nombre"))">
+                        <option value="">-- Seleccione un puesto --</option>
+                    </select>
+                    <span asp-validation-for="Input.id_puesto" class="text-danger small"></span>
+                </div>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger mt-3">
+                    <div asp-validation-summary="ModelOnly"></div>
+                </div>
+            }
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>Contratar
+                </button>
+                <a asp-page="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

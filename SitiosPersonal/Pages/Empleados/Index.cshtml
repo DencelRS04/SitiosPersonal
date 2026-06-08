@@ -1,0 +1,74 @@
+@page
+@model SitiosPersonal.Pages.Empleados.IndexModel
+@{
+    ViewData["Title"] = "Empleados";
+}
+
+<div class="page-header">
+    <h4 class="mb-0"><i class="fas fa-users me-2 text-danger"></i>Empleados Contratados</h4>
+    <a asp-page="Contratar" class="btn btn-primary btn-sm">
+        <i class="fas fa-user-plus me-1"></i>Contratar Empleado
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>N° Empleado</th>
+                        <th>Nombre</th>
+                        <th>Identificación</th>
+                        <th>Puesto</th>
+                        <th>Fecha Contratación</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.ViewModel.Empleados.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="fas fa-inbox fa-2x mb-2 d-block"></i>No hay empleados registrados.
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var emp in Model.ViewModel.Empleados)
+                    {
+                        <tr>
+                            <td><span class="badge bg-secondary">@emp.numero_empleado</span></td>
+                            <td>@emp.nombre_completo</td>
+                            <td>@emp.identificacion</td>
+                            <td>@emp.NombrePuesto</td>
+                            <td>@emp.fecha_contratacion.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <span class="badge @(emp.estado == "ACTIVO" ? "bg-success" : "bg-danger")">
+                                    @emp.estado
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @if (Model.ViewModel.TotalPaginas > 1)
+    {
+        <div class="card-footer d-flex align-items-center justify-content-between">
+            <small class="text-muted">
+                Mostrando @((Model.ViewModel.Pagina - 1) * Model.ViewModel.CantidadPorPagina + 1)–@(Math.Min(Model.ViewModel.Pagina * Model.ViewModel.CantidadPorPagina, Model.ViewModel.TotalRegistros)) de @Model.ViewModel.TotalRegistros registros
+            </small>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    @for (int i = 1; i <= Model.ViewModel.TotalPaginas; i++)
+                    {
+                        <li class="page-item @(i == Model.ViewModel.Pagina ? "active" : "")">
+                            <a class="page-link" asp-page="Index" asp-route-pagina="@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

@@ -1,0 +1,46 @@
+@page
+@model SitiosPersonal.Pages.Areas.CrearModel
+@{
+    ViewData["Title"] = "Nueva Área";
+}
+
+<div class="page-header">
+    <div>
+        <a asp-page="Index" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-arrow-left"></i></a>
+        <strong>Nueva Área</strong>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title mb-4 text-danger"><i class="fas fa-building me-2"></i>Formulario Área</h5>
+        <form method="post">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label asp-for="Input.codigo" class="form-label fw-semibold">Código *</label>
+                    <input asp-for="Input.codigo" class="form-control" placeholder="Ej. AREA-001" />
+                    <span asp-validation-for="Input.codigo" class="text-danger small"></span>
+                </div>
+                <div class="col-md-8">
+                    <label asp-for="Input.nombre" class="form-label fw-semibold">Nombre *</label>
+                    <input asp-for="Input.nombre" class="form-control" placeholder="Nombre del área (solo letras y espacios)" />
+                    <span asp-validation-for="Input.nombre" class="text-danger small"></span>
+                </div>
+                <div class="col-md-8">
+                    <label asp-for="Input.id_empleado_jefatura" class="form-label fw-semibold">Jefatura (Empleado)</label>
+                    <select asp-for="Input.id_empleado_jefatura" class="form-select"
+                            asp-items="@(new SelectList(Model.EmpleadosDisponibles, "id_empleado", "nombre_completo"))">
+                        <option value="">-- Seleccione jefatura --</option>
+                    </select>
+                </div>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mt-3"></div>
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i>Guardar</button>
+                <a asp-page="Index" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

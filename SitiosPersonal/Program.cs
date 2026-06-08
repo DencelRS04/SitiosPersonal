@@ -8,6 +8,10 @@ builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AddPageRoute("/Login/Index", "");
 
+    options.Conventions.AddPageRoute("/Puestos/Index", "Empleados/Puestos");
+    options.Conventions.AddPageRoute("/Areas/Index", "Empleados/Areas");
+    options.Conventions.AddPageRoute("/AccionesPersonal/Index", "Empleados/Acciones");
+
     options.Conventions.AddPageApplicationModelConvention("/Home/Index", model =>
     {
         model.Filters.Add(new ServiceFilterAttribute(typeof(SessionPageFilter)));
