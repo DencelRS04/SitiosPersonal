@@ -63,6 +63,12 @@
                     <span asp-validation-for="Entrevista.fecha_entrevista" class="text-danger"></span>
                 </div>
 
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Hora de la entrevista <span class="text-danger">*</span></label>
+                    <input asp-for="Entrevista.hora_entrevista" type="time" class="form-control" />
+                    <span asp-validation-for="Entrevista.hora_entrevista" class="text-danger"></span>
+                </div>
+
             </div>
 
         </div>

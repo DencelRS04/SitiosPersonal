@@ -1,9 +1,18 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SitiosPersonal.Entities.ViewModels
 {
     public class EntrevistaViewModel
     {
+        public EntrevistaViewModel()
+        {
+            estado = "PENDIENTE";
+            OferentesDisponibles = new List<OferenteDropdownItem>();
+            EmpleadosDisponibles = new List<EmpleadoDropdownItem>();
+        }
+
         public int id_entrevista { get; set; }
 
         [Required(ErrorMessage = "El oferente es obligatorio")]
@@ -15,15 +24,18 @@ namespace SitiosPersonal.Entities.ViewModels
         [Required(ErrorMessage = "La fecha de la entrevista es obligatoria")]
         public DateTime? fecha_entrevista { get; set; }
 
-        public string estado { get; set; } = "PENDIENTE";
+        [Required(ErrorMessage = "La hora de la entrevista es obligatoria")]
+        public TimeSpan? hora_entrevista { get; set; }
+
+        public string estado { get; set; }
 
         // Datos de solo lectura para mostrar en Editar (no se envía en el POST)
-        public string? NombreOferente { get; set; }
+        public string NombreOferente { get; set; }
 
         // Listas para dropdowns
-        public List<OferenteDropdownItem> OferentesDisponibles { get; set; } = new List<OferenteDropdownItem>();
+        public List<OferenteDropdownItem> OferentesDisponibles { get; set; }
 
-        public List<EmpleadoDropdownItem> EmpleadosDisponibles { get; set; } = new List<EmpleadoDropdownItem>();
+        public List<EmpleadoDropdownItem> EmpleadosDisponibles { get; set; }
     }
 
     public class OferenteDropdownItem

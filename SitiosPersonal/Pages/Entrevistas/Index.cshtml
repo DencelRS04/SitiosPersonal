@@ -38,7 +38,7 @@
                     <tr>
                         <th>Oferente</th>
                         <th>Entrevistador</th>
-                        <th style="width:130px;">Fecha entrevista</th>
+                        <th style="width:160px;">Fecha entrevista</th>
                         <th style="width:110px;">Estado</th>
                         <th style="width:170px;">Acciones</th>
                     </tr>
@@ -52,7 +52,7 @@
                             <tr>
                                 <td>@item.NombreOferente</td>
                                 <td>[@item.NumeroEmpleado] @item.NombreEmpleado</td>
-                                <td>@item.fecha_entrevista.ToString("dd/MM/yyyy")</td>
+                                <td>@item.fecha_entrevista.ToString("dd/MM/yyyy") @item.hora_entrevista.ToString(@"hh\:mm")</td>
                                 <td>
                                     <span class="badge @(item.estado == "PENDIENTE" ? "bg-warning text-dark" : "bg-success")">
                                         @item.estado
