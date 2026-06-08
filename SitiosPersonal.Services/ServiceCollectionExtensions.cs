@@ -29,6 +29,10 @@ namespace SitiosPersonal.Services
             services.AddScoped<PuestosRepository>();
             services.AddScoped<AccionesPersonalRepository>();
             services.AddScoped<RequisitosPuestoRepository>();
+            services.AddScoped<ParametroRepository>();
+            services.AddScoped<CompaniaRepository>();
+            services.AddScoped<UbicacionRepository>();
+            services.AddScoped<InstitucionEducativaRepository>();
 
             services.AddScoped<LoginService>();
             services.AddScoped<MenuService>();
@@ -48,6 +52,10 @@ namespace SitiosPersonal.Services
             services.AddScoped<PuestosService>();
             services.AddScoped<AccionesPersonalService>();
             services.AddScoped<RequisitoPuestosService>();
+            services.AddScoped<ParametroService>();
+            services.AddScoped<CompaniaService>();
+            services.AddScoped<UbicacionService>();
+            services.AddScoped<InstitucionEducativaService>();
             services.AddScoped<EncryptionHelper>();
 
             return services;

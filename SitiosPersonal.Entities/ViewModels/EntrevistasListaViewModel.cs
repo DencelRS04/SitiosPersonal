@@ -1,8 +1,16 @@
+using System;
+using System.Collections.Generic;
+
 namespace SitiosPersonal.Entities.ViewModels
 {
     public class EntrevistasListaViewModel
     {
-        public List<EntrevistaListaItem> Entrevistas { get; set; } = new List<EntrevistaListaItem>();
+        public EntrevistasListaViewModel()
+        {
+            Entrevistas = new List<EntrevistaListaItem>();
+        }
+
+        public List<EntrevistaListaItem> Entrevistas { get; set; }
 
         public int Pagina { get; set; }
 

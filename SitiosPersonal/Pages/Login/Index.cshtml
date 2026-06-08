@@ -38,7 +38,16 @@
 
                     @if (!string.IsNullOrEmpty(Model.Mensaje))
                     {
-                        <div class="alert alert-success">
+                        bool esExpiracion = Model.Mensaje.Contains("expirado") || Model.Mensaje.Contains("expirada") || (Model.Mensaje.Contains("inicie ses") && !Model.Mensaje.Contains("cerrada"));
+                        <div class="alert @(esExpiracion ? "alert-warning" : "alert-success")">
+                            @if (esExpiracion)
+                            {
+                                <i class="fas fa-clock me-1"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-check-circle me-1"></i>
+                            }
                             @Model.Mensaje
                         </div>
                     }
