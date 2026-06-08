@@ -1,0 +1,80 @@
+@page "/Oferentes/Entrevistas/Crear"
+@model SitiosPersonal.Pages.Entrevistas.CrearModel
+
+@{
+    ViewData["Title"] = "Agendar Entrevista";
+}
+
+<form method="post">
+
+    <div class="form-action-panel">
+        <a asp-page="Index" class="action-circle" title="Regresar">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
+
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Agendar Nueva Entrevista</h4>
+        </div>
+
+        <div class="card-body">
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="row">
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Oferente <span class="text-danger">*</span></label>
+                    <select asp-for="Entrevista.id_oferente" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                        @foreach (var o in Model.Entrevista.OferentesDisponibles)
+                        {
+                            <option value="@o.id_oferente">@o.nombre_completo</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Entrevista.id_oferente" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Empleado entrevistador <span class="text-danger">*</span></label>
+                    <select asp-for="Entrevista.id_empleado_entrevistador" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                        @foreach (var e in Model.Entrevista.EmpleadosDisponibles)
+                        {
+                            <option value="@e.id_empleado">[@e.numero_empleado] @e.nombre_completo</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Entrevista.id_empleado_entrevistador" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Fecha de la entrevista <span class="text-danger">*</span></label>
+                    <input asp-for="Entrevista.fecha_entrevista" type="date" class="form-control" />
+                    <span asp-validation-for="Entrevista.fecha_entrevista" class="text-danger"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

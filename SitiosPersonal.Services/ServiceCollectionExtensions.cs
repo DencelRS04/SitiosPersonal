@@ -1,0 +1,54 @@
+using Microsoft.Extensions.DependencyInjection;
+using SitiosPersonal.Repository.Data;
+using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Helpers;
+using SitiosPersonal.Services.Services;
+
+namespace SitiosPersonal.Services
+{
+    public static class ServiceCollectionExtensions
+    {
+        public static IServiceCollection AddSitiosPersonalServices(this IServiceCollection services)
+        {
+            services.AddSingleton<DbContext>();
+
+            services.AddScoped<LoginRepository>();
+            services.AddScoped<MenuRepository>();
+            services.AddScoped<BitacoraRepository>();
+            services.AddScoped<RolesRepository>();
+            services.AddScoped<PantallasRepository>();
+            services.AddScoped<UsuariosRepository>();
+            services.AddScoped<PermisosRepository>();
+            services.AddScoped<OferentesRepository>();
+            services.AddScoped<ConcursosRepository>();
+            services.AddScoped<PreparacionAcademicaRepository>();
+            services.AddScoped<ExperienciaLaboralRepository>();
+            services.AddScoped<EntrevistasRepository>();
+            services.AddScoped<ParametroRepository>();
+            services.AddScoped<CompaniaRepository>();
+            services.AddScoped<UbicacionRepository>();
+            services.AddScoped<InstitucionEducativaRepository>();
+
+            services.AddScoped<LoginService>();
+            services.AddScoped<MenuService>();
+            services.AddScoped<BitacoraService>();
+            services.AddScoped<BitacoraConsultaService>();
+            services.AddScoped<RolesService>();
+            services.AddScoped<PantallasService>();
+            services.AddScoped<UsuariosService>();
+            services.AddScoped<PermisosService>();
+            services.AddScoped<OferentesService>();
+            services.AddScoped<ConcursosService>();
+            services.AddScoped<PreparacionAcademicaService>();
+            services.AddScoped<ExperienciaLaboralService>();
+            services.AddScoped<EntrevistasService>();
+            services.AddScoped<ParametroService>();
+            services.AddScoped<CompaniaService>();
+            services.AddScoped<UbicacionService>();
+            services.AddScoped<InstitucionEducativaService>();
+            services.AddScoped<EncryptionHelper>();
+
+            return services;
+        }
+    }
+}

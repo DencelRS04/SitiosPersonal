@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using SitiosPersonal.Repository.Repositories;
+using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Filters
 {
     public class PermisoPageFilter : IAsyncPageFilter
     {
-        private readonly PermisosRepository _repository;
+        private readonly PermisosService _repository;
         private readonly ITempDataDictionaryFactory _tempDataFactory;
 
         public PermisoPageFilter(
-            PermisosRepository repository,
+            PermisosService repository,
             ITempDataDictionaryFactory tempDataFactory)
         {
             _repository = repository;

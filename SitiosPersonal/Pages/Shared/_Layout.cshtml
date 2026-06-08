@@ -1,5 +1,5 @@
-﻿@using SitiosPersonal.Repository.Repositories
-@inject MenuRepository MenuRepository
+﻿@using SitiosPersonal.Services.Services
+@inject MenuService MenuService
 
 @{
     var nombreUsuario = Context.Session.GetString("NombreCompleto");
@@ -7,7 +7,7 @@
     var idUsuario = Context.Session.GetInt32("IdUsuario");
     var menu = idUsuario == null
         ? new List<SitiosPersonal.Entities.Models.Pantalla>()
-        : MenuRepository.ObtenerMenuPorUsuario(idUsuario.Value);
+        : MenuService.ObtenerMenuPorUsuario(idUsuario.Value);
 }
 
 <!DOCTYPE html>
@@ -42,7 +42,9 @@
 
                     <div class="text-white mb-4">
                         <h4 class="sidebar-title mb-0">
-                            <i class="fas fa-users"></i>
+                            <img src="~/img/logo-personal-salud.png"
+                                 alt="Logo Servicios Médicos"
+                                 class="sidebar-logo-layout" />
                             Personal Sitios
                         </h4>
 
@@ -90,8 +92,8 @@
                             </div>
 
                             <a asp-page="/Login/Index"
-                               asp-page-handler="Logout"
-                               class="btn btn-outline-danger btn-sm">
+                                   asp-page-handler="Logout"
+                                   class="btn btn-outline-danger btn-sm">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Salir
                             </a>
@@ -120,6 +122,63 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    @if (!string.IsNullOrEmpty(nombreUsuario))
+    {
+        <!-- Modal SEG7: Sesión Expirada -->
+        <div class="modal fade" id="modalSesionExpirada" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Sesión Expirada</h5>
+                    </div>
+                    <div class="modal-body">
+                        La sesión ha expirado por inactividad. Por favor inicie sesión nuevamente.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnAceptarSesion">
+                            Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                // SEG7: Temporizador de inactividad - 5 minutos (300000 ms)
+                var TIEMPO_INACTIVIDAD = 5 * 60 * 1000;
+                var timerInactividad;
+                var modalMostrado = false;
+
+                function reiniciarTimer() {
+                    if (modalMostrado) return;
+                    clearTimeout(timerInactividad);
+                    timerInactividad = setTimeout(mostrarModalExpiracion, TIEMPO_INACTIVIDAD);
+                }
+
+                function mostrarModalExpiracion() {
+                    if (modalMostrado) return;
+                    modalMostrado = true;
+                    var modal = new bootstrap.Modal(document.getElementById('modalSesionExpirada'));
+                    modal.show();
+                }
+
+                // Redirigir al login al aceptar
+                document.getElementById('btnAceptarSesion').addEventListener('click', function () {
+                    window.location.href = '/Login/Index';
+                });
+
+                // Eventos que reinician el timer de inactividad
+                ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function (evento) {
+                    document.addEventListener(evento, reiniciarTimer, true);
+                });
+
+                // Iniciar timer al cargar la página
+                reiniciarTimer();
+            })();
+        </script>
+    }
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿using SitiosPersonal.Entities.Models;
+using SitiosPersonal.Entities.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace SitiosPersonal.Entities.ViewModels
@@ -8,20 +8,20 @@ namespace SitiosPersonal.Entities.ViewModels
         public int id_usuario { get; set; }
 
         [Required(ErrorMessage = "El nombre de usuario es obligatorio")]
-        public string usuario { get; set; }
+        public string usuario { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El nombre completo es obligatorio")]
-        public string nombre_completo { get; set; }
+        public string nombre_completo { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El correo es obligatorio")]
         [EmailAddress(ErrorMessage = "El correo no tiene un formato válido")]
-        public string correo { get; set; }
+        public string correo { get; set; } = string.Empty;
 
         [RegularExpression(
             @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$",
             ErrorMessage = "La contraseña debe tener mínimo 8 caracteres, mayúsculas, minúsculas, números y caracteres especiales"
         )]
-        public string? password { get; set; }
+        public string? password { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El estado es obligatorio")]
         public string estado { get; set; }

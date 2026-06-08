@@ -1,4 +1,4 @@
-﻿namespace SitiosPersonal.Entities.Models
+namespace SitiosPersonal.Entities.Models
 {
     public class ErrorViewModel
     {

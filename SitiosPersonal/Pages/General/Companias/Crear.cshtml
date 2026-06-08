@@ -1,0 +1,37 @@
+@page "/General/Companias/Crear"
+@model SitiosPersonal.Pages.General.Companias.CrearModel
+
+@{
+    ViewData["Title"] = "Formulario Compañía";
+}
+
+<form method="post">
+
+    <div class="form-action-panel">
+        <a asp-page="Index" class="action-circle" title="Regresar">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
+    </div>
+
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Formulario Compañía</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">Código</label>
+                <input asp-for="Compania.codigo" class="form-control" maxlength="50" />
+                <span asp-validation-for="Compania.codigo" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input asp-for="Compania.nombre" class="form-control" maxlength="150" />
+                <span asp-validation-for="Compania.nombre" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+</form>

@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Modulos
 {
     public class EditarModel : PageModel
     {
-        private readonly PantallasRepository _repository;
+        private readonly PantallasService _repository;
         private readonly BitacoraService _bitacoraService;
-        public EditarModel(PantallasRepository repository, BitacoraService bitacoraService) { _repository = repository; _bitacoraService = bitacoraService; }
+        public EditarModel(PantallasService repository, BitacoraService bitacoraService) { _repository = repository; _bitacoraService = bitacoraService; }
         [BindProperty] public PantallaViewModel Pantalla { get; set; } = new PantallaViewModel();
         public IActionResult OnGet(int id)
         {

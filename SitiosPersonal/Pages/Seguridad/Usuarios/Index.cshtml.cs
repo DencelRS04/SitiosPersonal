@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Usuarios
 {
     public class IndexModel : PageModel
     {
-        private readonly UsuariosRepository _repository;
+        private readonly UsuariosService _repository;
         private readonly BitacoraService _bitacoraService;
-        private readonly PermisosRepository _permisosRepository;
+        private readonly PermisosService _permisosRepository;
 
-        public IndexModel(UsuariosRepository repository, BitacoraService bitacoraService, PermisosRepository permisosRepository)
+        public IndexModel(UsuariosService repository, BitacoraService bitacoraService, PermisosService permisosRepository)
         { _repository = repository; _bitacoraService = bitacoraService; _permisosRepository = permisosRepository; }
 
         public UsuariosListaViewModel Lista { get; set; } = new UsuariosListaViewModel();

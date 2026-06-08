@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -73,7 +73,7 @@ namespace SitiosPersonal.Services.Helpers
             }
         }
 
-        private string Desencriptar(string textoEncriptado)
+        public string Desencriptar(string textoEncriptado)
         {
             string keyString = _configuration["Encryption:Key"];
 

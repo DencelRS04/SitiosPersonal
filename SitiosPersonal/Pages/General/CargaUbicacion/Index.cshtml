@@ -1,0 +1,170 @@
+@page "/General/CargaUbicacion"
+@model SitiosPersonal.Pages.General.CargaUbicacion.IndexModel
+
+@{
+    ViewData["Title"] = "Cargar Datos de Ubicación";
+}
+
+<div class="crud-card card">
+
+    <div class="crud-card-header">
+        <h4 class="crud-card-title">
+            <i class="fas fa-map-marker-alt"></i>
+            Cargar Datos de Ubicación
+        </h4>
+    </div>
+
+    <div class="card-body">
+
+        @if (TempData["Exito"] != null)
+        {
+            <div class="alert alert-success">@TempData["Exito"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <p class="text-muted">
+            Seleccione un archivo CSV con el formato:<br />
+            <code>Provincia,Canton,Distrito</code><br />
+            La primera fila debe ser el encabezado. Los IDs se asignan automáticamente.<br />
+            Si vuelve a cargar el archivo, solo se agregarán registros nuevos o se actualizarán nombres existentes.
+        </p>
+
+        <form method="post" enctype="multipart/form-data" class="mb-4">
+            <div class="mb-3">
+                <label class="form-label">Archivo CSV</label>
+                <input type="file" name="archivo" accept=".csv,.txt" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-upload"></i>
+                Cargar archivo
+            </button>
+        </form>
+
+        <hr />
+
+        <!-- Tabs: Provincia / Cantón / Distrito -->
+        <ul class="nav nav-tabs" id="tabUbicacion" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-provincia" data-bs-toggle="tab"
+                        data-bs-target="#pane-provincia" type="button" role="tab">
+                    Provincias (@Model.Provincias.Count())
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-canton" data-bs-toggle="tab"
+                        data-bs-target="#pane-canton" type="button" role="tab">
+                    Cantones (@Model.Cantones.Count())
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-distrito" data-bs-toggle="tab"
+                        data-bs-target="#pane-distrito" type="button" role="tab">
+                    Distritos (@Model.Distritos.Count())
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content pt-3" id="tabUbicacionContent">
+
+            <!-- Provincias -->
+            <div class="tab-pane fade show active" id="pane-provincia" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">ID</th>
+                                <th>Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Provincias.Any())
+                            {
+                                foreach (var item in Model.Provincias)
+                                {
+                                    <tr>
+                                        <td>@item.id_provincia</td>
+                                        <td>@item.nombre</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="2" class="text-center text-muted">Sin datos cargados.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cantones -->
+            <div class="tab-pane fade" id="pane-canton" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">ID</th>
+                                <th>Nombre</th>
+                                <th>Provincia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Cantones.Any())
+                            {
+                                foreach (var item in Model.Cantones)
+                                {
+                                    <tr>
+                                        <td>@item.id_canton</td>
+                                        <td>@item.nombre</td>
+                                        <td>@item.nombre_provincia</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="3" class="text-center text-muted">Sin datos cargados.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Distritos -->
+            <div class="tab-pane fade" id="pane-distrito" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:80px;">ID</th>
+                                <th>Nombre</th>
+                                <th>Cantón</th>
+                                <th>Provincia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Distritos.Any())
+                            {
+                                foreach (var item in Model.Distritos)
+                                {
+                                    <tr>
+                                        <td>@item.id_distrito</td>
+                                        <td>@item.nombre</td>
+                                        <td>@item.nombre_canton</td>
+                                        <td>@item.nombre_provincia</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="4" class="text-center text-muted">Sin datos cargados.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

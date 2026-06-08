@@ -18,7 +18,9 @@
                     <div class="mb-3">
                         <div class="bg-primary text-white rounded-circle mx-auto d-flex align-items-center justify-content-center"
                              style="width:75px; height:75px; font-size:32px;">
-                            <i class="fas fa-users"></i>
+                            <img src="~/img/logo-personal-salud.png"
+                                 alt="Logo Servicios Médicos"
+                                 class="sidebar-logo-login" />
                         </div>
                     </div>
 
@@ -36,7 +38,16 @@
 
                     @if (!string.IsNullOrEmpty(Model.Mensaje))
                     {
-                        <div class="alert alert-success">
+                        bool esExpiracion = Model.Mensaje.Contains("expirado") || Model.Mensaje.Contains("expirada") || (Model.Mensaje.Contains("inicie ses") && !Model.Mensaje.Contains("cerrada"));
+                        <div class="alert @(esExpiracion ? "alert-warning" : "alert-success")">
+                            @if (esExpiracion)
+                            {
+                                <i class="fas fa-clock me-1"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-check-circle me-1"></i>
+                            }
                             @Model.Mensaje
                         </div>
                     }

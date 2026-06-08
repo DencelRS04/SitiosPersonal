@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Repository.Repositories;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Modulos
 {
     public class CrearModel : PageModel
     {
-        private readonly PantallasRepository _repository;
+        private readonly PantallasService _repository;
         private readonly BitacoraService _bitacoraService;
-        public CrearModel(PantallasRepository repository, BitacoraService bitacoraService) { _repository = repository; _bitacoraService = bitacoraService; }
+        public CrearModel(PantallasService repository, BitacoraService bitacoraService) { _repository = repository; _bitacoraService = bitacoraService; }
         [BindProperty] public PantallaViewModel Pantalla { get; set; } = new PantallaViewModel();
         public IActionResult OnGet() { if (HttpContext.Session.GetInt32("IdUsuario") == null) { TempData["Mensaje"] = "Por favor inicie sesión para utilizar el sistema"; return RedirectToPage("/Login/Index"); } Pantalla.RolesDisponibles = _repository.ListarRoles(); return Page(); }
         public IActionResult OnPost()
