@@ -30,7 +30,7 @@ namespace SitiosPersonal.Entities.ViewModels
         public string estado { get; set; }
 
         // Datos de solo lectura para mostrar en Editar (no se envía en el POST)
-        public string NombreOferente { get; set; }
+        public string? NombreOferente { get; set; }
 
         // Listas para dropdowns
         public List<OferenteDropdownItem> OferentesDisponibles { get; set; }
