@@ -53,7 +53,7 @@ namespace SitiosPersonal.Services.Services
             };
         }
 
-        public void Crear(AccionPersonalViewModel vm)
+        public (bool exito, string? error) Crear(AccionPersonalViewModel vm)
         {
             var accion = new AccionPersonal
             {
@@ -65,11 +65,14 @@ namespace SitiosPersonal.Services.Services
             };
 
             _accionesRepo.Crear(accion);
+            return (true, null);
         }
 
-        public void Actualizar(AccionPersonalViewModel vm)
+        public (bool exito, string? error) Actualizar(AccionPersonalViewModel vm)
         {
             var anterior = _accionesRepo.ObtenerPorId(vm.id_accion);
+            if (anterior == null)
+                return (false, "No se encontró la acción de personal a actualizar.");
 
             var accion = new AccionPersonal
             {
@@ -82,6 +85,7 @@ namespace SitiosPersonal.Services.Services
             };
 
             _accionesRepo.Actualizar(accion);
+            return (true, null);
         }
 
         public (bool exito, string error) Eliminar(int id)

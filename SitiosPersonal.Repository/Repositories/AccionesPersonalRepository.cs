@@ -45,7 +45,7 @@ namespace SitiosPersonal.Repository.Repositories
             return connection.ExecuteScalar<int>("SELECT COUNT(*) FROM accion_personal;");
         }
 
-        public AccionPersonal ObtenerPorId(int id_accion)
+        public AccionPersonal? ObtenerPorId(int id_accion)
         {
             using var connection = _context.CreateConnection();
 
@@ -73,12 +73,17 @@ namespace SitiosPersonal.Repository.Repositories
         {
             using var connection = _context.CreateConnection();
 
-            string sql = @"
-                INSERT INTO accion_personal(fecha_accion, descripcion, id_empleado, id_aprobador)
-                VALUES(@fecha_accion, @descripcion, @id_empleado, @id_empleado_jefatura);
-                SELECT LAST_INSERT_ID();";
+            // Generar el siguiente ID disponible
+            int nuevoId = connection.ExecuteScalar<int>("SELECT COALESCE(MAX(id_accion), 0) + 1 FROM accion_personal;");
+            
+            accion.id_accion = nuevoId;
 
-            return connection.ExecuteScalar<int>(sql, accion);
+            string sql = @"
+                INSERT INTO accion_personal(id_accion, fecha_accion, descripcion, id_empleado, id_aprobador)
+                VALUES(@id_accion, @fecha_accion, @descripcion, @id_empleado, @id_empleado_jefatura);";
+
+            connection.Execute(sql, accion);
+            return nuevoId;
         }
 
         public void Actualizar(AccionPersonal accion)

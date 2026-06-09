@@ -8,12 +8,12 @@ namespace SitiosPersonal.Entities.ViewModels
 
         [Required(ErrorMessage = "El código del área es obligatorio")]
         [StringLength(20, ErrorMessage = "El código no puede superar los 20 caracteres")]
-        public string codigo { get; set; }
+        public string? codigo { get; set; }
 
         [Required(ErrorMessage = "El nombre del área es obligatorio")]
         [StringLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres")]
         [RegularExpression(@"^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$", ErrorMessage = "El nombre solo debe contener letras y espacios")]
-        public string nombre { get; set; }
+        public string? nombre { get; set; }
 
         public int? id_empleado_jefatura { get; set; }
 
@@ -37,10 +37,10 @@ namespace SitiosPersonal.Entities.ViewModels
     {
         public int id_area { get; set; }
 
-        public string codigo { get; set; }
+        public string? codigo { get; set; }
 
-        public string nombre { get; set; }
+        public string? nombre { get; set; }
 
-        public string NombreJefatura { get; set; }
+        public string? NombreJefatura { get; set; }
     }
 }

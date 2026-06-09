@@ -41,12 +41,13 @@ namespace SitiosPersonal.Repository.Repositories
             return connection.ExecuteScalar<int>("SELECT COUNT(*) FROM puesto;");
         }
 
-        public Puesto ObtenerPorId(int id_puesto)
+        public Puesto? ObtenerPorId(int id_puesto)
         {
             using var connection = _context.CreateConnection();
 
             string sql = @"
-                SELECT id_puesto, codigo, nombre, salario AS monto_salario, id_puesto_jefe AS id_puesto_jefatura, activo
+                SELECT id_puesto, codigo, nombre, salario AS monto_salario, id_puesto_jefe AS id_puesto_jefatura, 
+                       COALESCE(activo, 1) AS activo
                 FROM puesto
                 WHERE id_puesto = @id_puesto;";
 
@@ -58,7 +59,8 @@ namespace SitiosPersonal.Repository.Repositories
             using var connection = _context.CreateConnection();
 
             string sql = @"
-                SELECT id_puesto, codigo, nombre, salario AS monto_salario, id_puesto_jefe AS id_puesto_jefatura
+                SELECT id_puesto, codigo, nombre, salario AS monto_salario, id_puesto_jefe AS id_puesto_jefatura,
+                       COALESCE(activo, 1) AS activo
                 FROM puesto
                 ORDER BY nombre;";
 
@@ -82,12 +84,17 @@ namespace SitiosPersonal.Repository.Repositories
         {
             using var connection = _context.CreateConnection();
 
-            string sql = @"
-                INSERT INTO puesto(codigo, nombre, salario, id_puesto_jefe, activo)
-                VALUES(@codigo, @nombre, @monto_salario, @id_puesto_jefatura, 1);
-                SELECT LAST_INSERT_ID();";
+            // Generar el siguiente ID disponible
+            int nuevoId = connection.ExecuteScalar<int>("SELECT COALESCE(MAX(id_puesto), 0) + 1 FROM puesto;");
+            
+            puesto.id_puesto = nuevoId;
 
-            return connection.ExecuteScalar<int>(sql, puesto);
+            string sql = @"
+                INSERT INTO puesto(id_puesto, codigo, nombre, salario, id_puesto_jefe)
+                VALUES(@id_puesto, @codigo, @nombre, @monto_salario, @id_puesto_jefatura);";
+
+            connection.Execute(sql, puesto);
+            return nuevoId;
         }
 
         public void Actualizar(Puesto puesto)

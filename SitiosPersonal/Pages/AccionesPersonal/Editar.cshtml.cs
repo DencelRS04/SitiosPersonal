@@ -47,7 +47,14 @@ namespace SitiosPersonal.Pages.AccionesPersonal
                 return Page();
             }
 
-            _accionesService.Actualizar(Input);
+            var (exito, error) = _accionesService.Actualizar(Input);
+
+            if (!exito)
+            {
+                ModelState.AddModelError("Input.descripcion", error);
+                EmpleadosDisponibles = _accionesService.ObtenerFormularioCrear().EmpleadosDisponibles;
+                return Page();
+            }
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
             _bitacoraService.RegistrarUpdate(idUsuario, "AccionPersonal",

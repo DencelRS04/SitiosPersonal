@@ -58,8 +58,7 @@ namespace SitiosPersonal.Services.Services
                 codigo = vm.codigo,
                 nombre = vm.nombre,
                 monto_salario = vm.monto_salario,
-                id_puesto_jefatura = vm.id_puesto_jefatura,
-                activo = true
+                id_puesto_jefatura = vm.id_puesto_jefatura
             };
 
             _puestosRepo.Crear(puesto);

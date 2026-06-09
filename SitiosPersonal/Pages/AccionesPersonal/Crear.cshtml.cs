@@ -49,7 +49,16 @@ namespace SitiosPersonal.Pages.AccionesPersonal
                 return Page();
             }
 
-            _accionesService.Crear(Input);
+            var (exito, error) = _accionesService.Crear(Input);
+
+            if (!exito)
+            {
+                ModelState.AddModelError("Input.descripcion", error);
+                var vm = _accionesService.ObtenerFormularioCrear();
+                CodigoGenerado = vm.codigo;
+                EmpleadosDisponibles = vm.EmpleadosDisponibles;
+                return Page();
+            }
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
             _bitacoraService.RegistrarInsert(idUsuario, "AccionPersonal", new

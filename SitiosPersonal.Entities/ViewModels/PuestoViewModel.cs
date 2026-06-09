@@ -9,11 +9,11 @@ namespace SitiosPersonal.Entities.ViewModels
 
         [Required(ErrorMessage = "El código del puesto es obligatorio")]
         [StringLength(20, ErrorMessage = "El código no puede superar los 20 caracteres")]
-        public string codigo { get; set; }
+        public string? codigo { get; set; }
 
         [Required(ErrorMessage = "El nombre del puesto es obligatorio")]
         [StringLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres")]
-        public string nombre { get; set; }
+        public string? nombre { get; set; }
 
         [Required(ErrorMessage = "El monto del salario es obligatorio")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El monto del salario debe ser mayor a 0")]
@@ -42,12 +42,12 @@ namespace SitiosPersonal.Entities.ViewModels
     {
         public int id_puesto { get; set; }
 
-        public string codigo { get; set; }
+        public string? codigo { get; set; }
 
-        public string nombre { get; set; }
+        public string? nombre { get; set; }
 
         public decimal monto_salario { get; set; }
 
-        public string NombreJefatura { get; set; }
+        public string? NombreJefatura { get; set; }
     }
 }
