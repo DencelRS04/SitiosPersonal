@@ -45,63 +45,107 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
                 return RedirectToPage("Index");
             }
 
+            // Validar extensión .csv únicamente
+            var extension = System.IO.Path.GetExtension(archivo.FileName).ToLowerInvariant();
+            if (extension != ".csv")
+            {
+                TempData["Error"] = "Solo se aceptan archivos con extensión .csv.";
+                return RedirectToPage("Index");
+            }
+
             try
             {
                 using var reader = new System.IO.StreamReader(archivo.OpenReadStream());
-                int provincias = 0, cantones = 0, distritos = 0;
 
-                // Diccionarios para asignar IDs y reutilizarlos por nombre
-                var provinciaMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-                var cantonMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-
-                // Cargar provincias y cantones ya existentes en la BD para continuar sus IDs
-                foreach (var p in _ubicacionService.ListarProvincias())
-                    provinciaMap[p.nombre] = p.id_provincia;
-
-                foreach (var c in _ubicacionService.ListarCantones())
+                // --- Validar encabezado obligatorio exacto ---
+                var encabezado = reader.ReadLine()?.Trim();
+                if (encabezado == null || !encabezado.Equals("Provincia,Canton,Distrito", StringComparison.OrdinalIgnoreCase))
                 {
-                    string key = $"{c.nombre_provincia}|{c.nombre}";
-                    cantonMap[key] = c.id_canton;
+                    TempData["Error"] = "El archivo no tiene el encabezado requerido. La primera línea debe ser exactamente: Provincia,Canton,Distrito";
+                    return RedirectToPage("Index");
                 }
 
-                int nextProvinciaId = provinciaMap.Count > 0 ? provinciaMap.Values.Max() + 1 : 1;
-                int nextCantonId = cantonMap.Count > 0 ? cantonMap.Values.Max() + 1 : 1;
-                int nextDistritoId = 1;
-
-                // Obtener el siguiente ID de distrito disponible
-                var distritosExistentes = _ubicacionService.ListarDistritos().ToList();
-                if (distritosExistentes.Count > 0)
-                    nextDistritoId = ((IEnumerable<dynamic>)distritosExistentes).Max(d => (int)d.id_distrito) + 1;
-
-                // Saltar encabezado si existe
-                bool esPrimeraLinea = true;
+                // --- Leer todas las líneas y validar formato estricto antes de procesar ---
+                var lineasValidas = new List<(string provincia, string canton, string distrito)>();
+                int numeroLinea = 1; // empieza en 2 considerando el encabezado
 
                 while (!reader.EndOfStream)
                 {
-                    var linea = reader.ReadLine()?.Trim();
+                    numeroLinea++;
+                    var linea = reader.ReadLine();
+
+                    // Saltar líneas completamente vacías
                     if (string.IsNullOrWhiteSpace(linea)) continue;
 
-                    // Saltar encabezado (Provincia,Canton,Distrito)
-                    if (esPrimeraLinea)
+                    // Detectar delimitadores no permitidos (punto y coma, tabulador, pipe)
+                    if (linea.Contains(';') || linea.Contains('\t') || linea.Contains('|'))
                     {
-                        esPrimeraLinea = false;
-                        if (linea.StartsWith("Provincia", StringComparison.OrdinalIgnoreCase))
-                            continue;
+                        TempData["Error"] = $"Línea {numeroLinea}: se detectó un delimitador no permitido. Use únicamente coma (,) como separador.";
+                        return RedirectToPage("Index");
                     }
 
                     var partes = linea.Split(',');
-                    if (partes.Length < 3) continue;
+
+                    // Debe tener exactamente 3 columnas
+                    if (partes.Length != 3)
+                    {
+                        TempData["Error"] = $"Línea {numeroLinea}: se encontraron {partes.Length} columna(s). El archivo debe tener exactamente 3 columnas: Provincia,Canton,Distrito.";
+                        return RedirectToPage("Index");
+                    }
 
                     string nombreProvincia = partes[0].Trim();
                     string nombreCanton = partes[1].Trim();
                     string nombreDistrito = partes[2].Trim();
 
-                    if (string.IsNullOrWhiteSpace(nombreProvincia) ||
-                        string.IsNullOrWhiteSpace(nombreCanton) ||
-                        string.IsNullOrWhiteSpace(nombreDistrito))
-                        continue;
+                    // Ningún campo puede estar vacío
+                    if (string.IsNullOrWhiteSpace(nombreProvincia))
+                    {
+                        TempData["Error"] = $"Línea {numeroLinea}: el campo Provincia está vacío.";
+                        return RedirectToPage("Index");
+                    }
+                    if (string.IsNullOrWhiteSpace(nombreCanton))
+                    {
+                        TempData["Error"] = $"Línea {numeroLinea}: el campo Canton está vacío.";
+                        return RedirectToPage("Index");
+                    }
+                    if (string.IsNullOrWhiteSpace(nombreDistrito))
+                    {
+                        TempData["Error"] = $"Línea {numeroLinea}: el campo Distrito está vacío.";
+                        return RedirectToPage("Index");
+                    }
 
-                    // --- Provincia ---
+                    lineasValidas.Add((nombreProvincia, nombreCanton, nombreDistrito));
+                }
+
+                if (lineasValidas.Count == 0)
+                {
+                    TempData["Error"] = "El archivo no contiene datos de ubicación.";
+                    return RedirectToPage("Index");
+                }
+
+                // --- Procesar registros validados ---
+                int provincias = 0, cantones = 0, distritos = 0;
+
+                var provinciaMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                var cantonMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var p in _ubicacionService.ListarProvincias())
+                    provinciaMap[p.nombre] = p.id_provincia;
+
+                foreach (var c in _ubicacionService.ListarCantones())
+                    cantonMap[$"{c.nombre_provincia}|{c.nombre}"] = c.id_canton;
+
+                int nextProvinciaId = provinciaMap.Count > 0 ? provinciaMap.Values.Max() + 1 : 1;
+                int nextCantonId = cantonMap.Count > 0 ? cantonMap.Values.Max() + 1 : 1;
+                int nextDistritoId = 1;
+
+                var distritosExistentes = _ubicacionService.ListarDistritos().ToList();
+                if (distritosExistentes.Count > 0)
+                    nextDistritoId = ((IEnumerable<dynamic>)distritosExistentes).Max(d => (int)d.id_distrito) + 1;
+
+                foreach (var (nombreProvincia, nombreCanton, nombreDistrito) in lineasValidas)
+                {
+                    // Provincia
                     if (!provinciaMap.TryGetValue(nombreProvincia, out int idProvincia))
                     {
                         idProvincia = nextProvinciaId++;
@@ -110,7 +154,7 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
                         provincias++;
                     }
 
-                    // --- Cantón ---
+                    // Cantón
                     string cantonKey = $"{nombreProvincia}|{nombreCanton}";
                     if (!cantonMap.TryGetValue(cantonKey, out int idCanton))
                     {
@@ -120,8 +164,7 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
                         cantones++;
                     }
 
-                    // --- Distrito ---
-                    // Los distritos pueden repetir nombre en distintos cantones, siempre se insertan
+                    // Distrito
                     _ubicacionService.UpsertDistrito(new Distrito { id_distrito = nextDistritoId++, id_canton = idCanton, nombre = nombreDistrito });
                     distritos++;
                 }
