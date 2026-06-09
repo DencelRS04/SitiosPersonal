@@ -91,13 +91,11 @@
                                 @nombreUsuario.Substring(0, 1).ToUpper()
                             </div>
 
-                            <a asp-page="/Login/Index"
-                                   asp-page-handler="Logout"
+                            <a href="/Login?handler=Logout"
                                    class="btn btn-outline-danger btn-sm">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Salir
                             </a>
-
                         </div>
 
                     </nav>
