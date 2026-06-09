@@ -34,10 +34,7 @@
 
         <div class="card-body">
 
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger">@TempData["Error"]</div>
-            }
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
 
             <input type="hidden" asp-for="Oferente.id_oferente" />
 
@@ -76,7 +73,8 @@
 
             </div>
 
-            <h5 class="form-section-title">Correos electrónicos</h5>
+            <h5 class="form-section-title">Correos electrónicos <span class="text-danger">*</span></h5>
+            <span asp-validation-for="Oferente.Correos" class="text-danger small d-block mb-1"></span>
             <div id="correosContainer">
                 @for (int i = 0; i < Model.Oferente.Correos.Count; i++)
                 {
@@ -97,7 +95,8 @@
                 <i class="fas fa-plus"></i> Agregar correo
             </button>
 
-            <h5 class="form-section-title">Teléfonos de contacto</h5>
+            <h5 class="form-section-title">Teléfonos de contacto <span class="text-danger">*</span></h5>
+            <span asp-validation-for="Oferente.Telefonos" class="text-danger small d-block mb-1"></span>
             <div id="telefonosContainer">
                 @for (int i = 0; i < Model.Oferente.Telefonos.Count; i++)
                 {

@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AddPageRoute("/Login/Index", "");
+    // No se agrega ruta manual para /Login porque Razor Pages
+    // ya genera /Login automáticamente desde Pages/Login/Index.cshtml
 
     options.Conventions.AddPageRoute("/Puestos/Index", "Empleados/Puestos");
     options.Conventions.AddPageRoute("/Areas/Index", "Empleados/Areas");
@@ -65,9 +66,30 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
 app.UseSession();
 app.UseAuthorization();
+
+// Cuando entren a la raíz del dominio, redirige al login.
+// Ejemplo: https://tiusr27pl.cuc-carrera-ti.ac.cr/ -> /Login
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Login");
+    return Task.CompletedTask;
+});
+
+// Ruta directa para cerrar sesión.
+// Evita problemas con ?handler=Logout en Plesk.
+app.MapGet("/Logout", context =>
+{
+    context.Session.Clear();
+    context.Response.Cookies.Delete("SesionIniciada");
+
+    context.Response.Redirect("/Login");
+    return Task.CompletedTask;
+});
 
 app.MapRazorPages();
 

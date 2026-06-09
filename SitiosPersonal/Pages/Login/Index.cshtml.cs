@@ -105,15 +105,5 @@ namespace SitiosPersonal.Pages.Login
 
             return RedirectToPage("/Home/Index");
         }
-
-        public IActionResult OnGetLogout()
-        {
-            HttpContext.Session.Clear();
-            Response.Cookies.Delete("SesionIniciada");
-
-            TempData["Mensaje"] = "Sesión cerrada correctamente.";
-
-            return RedirectToPage("/Login/Index");
-        }
     }
 }

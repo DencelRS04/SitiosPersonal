@@ -91,13 +91,11 @@
                                 @nombreUsuario.Substring(0, 1).ToUpper()
                             </div>
 
-                            <a asp-page="/Login/Index"
-                                   asp-page-handler="Logout"
+                            <a href="/Logout"
                                    class="btn btn-outline-danger btn-sm">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Salir
                             </a>
-
                         </div>
 
                     </nav>
@@ -166,7 +164,7 @@
 
                 // Redirigir al login al aceptar
                 document.getElementById('btnAceptarSesion').addEventListener('click', function () {
-                    window.location.href = '/Login/Index';
+                    window.location.href = '/Login';
                 });
 
                 // Eventos que reinician el timer de inactividad
