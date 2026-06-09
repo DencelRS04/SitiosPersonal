@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
@@ -19,10 +20,11 @@ namespace SitiosPersonal.Pages.Entrevistas
             _repository = repository;
             _oferentesRepository = oferentesRepository;
             _bitacoraService = bitacoraService;
+            Entrevista = new EntrevistaViewModel();
         }
 
         [BindProperty]
-        public EntrevistaViewModel Entrevista { get; set; } = new EntrevistaViewModel();
+        public EntrevistaViewModel Entrevista { get; set; }
 
         public IActionResult OnGet(int id)
         {
@@ -44,7 +46,7 @@ namespace SitiosPersonal.Pages.Entrevistas
             {
                 id_entrevista = entrevista.id_entrevista,
                 id_oferente = entrevista.id_oferente,
-                NombreOferente = oferente?.nombre_completo ?? "",
+                NombreOferente = oferente != null ? oferente.nombre_completo : "",
                 id_empleado_entrevistador = entrevista.id_empleado_entrevistador,
                 fecha_entrevista = entrevista.fecha_entrevista,
                 hora_entrevista = entrevista.hora_entrevista,
@@ -67,7 +69,7 @@ namespace SitiosPersonal.Pages.Entrevistas
                 if (ent != null)
                 {
                     var oferente = _oferentesRepository.ObtenerPorId(ent.id_oferente);
-                    Entrevista.NombreOferente = oferente?.nombre_completo ?? "";
+                    Entrevista.NombreOferente = oferente != null ? oferente.nombre_completo : "";
                 }
                 Entrevista.EmpleadosDisponibles = _repository.ListarEmpleados();
                 return Page();
@@ -85,9 +87,9 @@ namespace SitiosPersonal.Pages.Entrevistas
             {
                 id_entrevista = id,
                 id_oferente = anterior.id_oferente,
-                id_empleado_entrevistador = Entrevista.id_empleado_entrevistador!.Value,
-                fecha_entrevista = Entrevista.fecha_entrevista!.Value,
-                hora_entrevista = Entrevista.hora_entrevista!.Value
+                id_empleado_entrevistador = Entrevista.id_empleado_entrevistador.Value,
+                fecha_entrevista = Entrevista.fecha_entrevista.Value,
+                hora_entrevista = Entrevista.hora_entrevista.Value
             };
 
             _repository.Actualizar(actualizado);

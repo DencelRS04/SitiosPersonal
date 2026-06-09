@@ -17,10 +17,11 @@ namespace SitiosPersonal.Pages.Entrevistas
         {
             _repository = repository;
             _bitacoraService = bitacoraService;
+            Entrevista = new EntrevistaViewModel();
         }
 
         [BindProperty]
-        public EntrevistaViewModel Entrevista { get; set; } = new EntrevistaViewModel();
+        public EntrevistaViewModel Entrevista { get; set; }
 
         public IActionResult OnGet()
         {
@@ -47,10 +48,10 @@ namespace SitiosPersonal.Pages.Entrevistas
 
             var entrevista = new Entrevista
             {
-                id_oferente = Entrevista.id_oferente!.Value,
-                id_empleado_entrevistador = Entrevista.id_empleado_entrevistador!.Value,
-                fecha_entrevista = Entrevista.fecha_entrevista!.Value,
-                hora_entrevista = Entrevista.hora_entrevista!.Value
+                id_oferente = Entrevista.id_oferente.Value,
+                id_empleado_entrevistador = Entrevista.id_empleado_entrevistador.Value,
+                fecha_entrevista = Entrevista.fecha_entrevista.Value,
+                hora_entrevista = Entrevista.hora_entrevista.Value
             };
 
             int idEntrevista = _repository.Crear(entrevista);
