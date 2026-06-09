@@ -9,6 +9,10 @@ namespace SitiosPersonal.Pages.Home
 
         public IActionResult OnGet()
         {
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
             if (idUsuario == null)

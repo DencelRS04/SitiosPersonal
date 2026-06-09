@@ -167,3 +167,18 @@
         background: #4169e1;
         color: white;
     }
+
+.login-body {
+    background-color: #f4f6fb;
+}
+
+.login-card {
+    width: 400px;
+    border: none;
+}
+
+.login-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}

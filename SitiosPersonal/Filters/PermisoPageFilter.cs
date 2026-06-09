@@ -23,8 +23,14 @@ namespace SitiosPersonal.Filters
             return Task.CompletedTask;
         }
 
-        public Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
+        public async Task OnPageHandlerExecutionAsync(
+            PageHandlerExecutingContext context,
+            PageHandlerExecutionDelegate next)
         {
+            context.HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            context.HttpContext.Response.Headers["Pragma"] = "no-cache";
+            context.HttpContext.Response.Headers["Expires"] = "0";
+
             int? idUsuario = context.HttpContext.Session.GetInt32("IdUsuario");
             var tempData = _tempDataFactory.GetTempData(context.HttpContext);
 
@@ -37,14 +43,15 @@ namespace SitiosPersonal.Filters
                     : "Por favor inicie sesión para utilizar el sistema";
 
                 context.Result = new RedirectToPageResult("/Login/Index");
-                return Task.CompletedTask;
+                return;
             }
 
             string rutaActual = context.HttpContext.Request.Path.Value ?? string.Empty;
 
             if (_repository.EsAdministrador(idUsuario.Value))
             {
-                return next();
+                await next();
+                return;
             }
 
             var rutasPermitidas = _repository.ObtenerRutasPermitidas(idUsuario.Value);
@@ -58,10 +65,10 @@ namespace SitiosPersonal.Filters
             {
                 tempData["Error"] = "No tiene permisos para acceder a esta pantalla.";
                 context.Result = new RedirectToPageResult("/Home/Index");
-                return Task.CompletedTask;
+                return;
             }
 
-            return next();
+            await next();
         }
     }
 }

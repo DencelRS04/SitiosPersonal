@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Services.Services;
 using SitiosPersonal.Services.Helpers;
+using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Login
 {
@@ -31,6 +31,9 @@ namespace SitiosPersonal.Pages.Login
 
         public void OnGet()
         {
+            HttpContext.Session.Clear();
+            Response.Cookies.Delete("SesionIniciada");
+
             if (TempData["Mensaje"] != null)
             {
                 Mensaje = TempData["Mensaje"]?.ToString();
@@ -77,7 +80,11 @@ namespace SitiosPersonal.Pages.Login
                 int intentosActuales = usuario.intentos_login + 1;
 
                 var paramIntentos = _parametroService.ObtenerPorCodigo("MAX_INTENTOS_LOGIN");
-                int maxIntentos = (paramIntentos != null && int.TryParse(paramIntentos.valor, out int v)) ? v : 3;
+
+                int maxIntentos =
+                    paramIntentos != null && int.TryParse(paramIntentos.valor, out int v)
+                        ? v
+                        : 3;
 
                 if (intentosActuales >= maxIntentos)
                 {
