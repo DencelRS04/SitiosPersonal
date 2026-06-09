@@ -61,9 +61,20 @@ namespace SitiosPersonal.Repository.Repositories
             connection.Execute(sql, parametro);
         }
 
+        public Parametro ObtenerPorCodigo(string codigo)
+        {
+            using var connection = _context.CreateConnection();
+            string sql = "SELECT id_parametro, codigo, valor FROM parametro WHERE codigo = @codigo;";
+            return connection.QueryFirstOrDefault<Parametro>(sql, new { codigo });
+        }
+
         public bool PuedeEliminar(int id_parametro)
         {
-            // Parámetros son configuración general, sin FK directas en este modelo
+            // Los parámetros del sistema en uso no se pueden eliminar
+            var codigosReservados = new[] { "SESION_MINUTOS", "MAX_INTENTOS_LOGIN" };
+            var parametro = ObtenerPorId(id_parametro);
+            if (parametro != null && codigosReservados.Contains(parametro.codigo))
+                return false;
             return true;
         }
 

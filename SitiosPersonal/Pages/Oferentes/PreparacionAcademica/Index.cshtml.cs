@@ -23,6 +23,8 @@ namespace SitiosPersonal.Pages.Oferentes.PreparacionAcademica
 
         public PreparacionAcademicaListaViewModel Lista { get; set; } = new PreparacionAcademicaListaViewModel();
 
+        public PreparacionAcademicaListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int idOferente)
         {
             if (HttpContext.Session.GetInt32("IdUsuario") == null)

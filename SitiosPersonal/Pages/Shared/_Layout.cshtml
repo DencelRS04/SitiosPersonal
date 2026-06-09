@@ -1,5 +1,6 @@
 ﻿@using SitiosPersonal.Services.Services
 @inject MenuService MenuService
+@inject ParametroService ParametroService
 
 @{
     var nombreUsuario = Context.Session.GetString("NombreCompleto");
@@ -8,6 +9,12 @@
     var menu = idUsuario == null
         ? new List<SitiosPersonal.Entities.Models.Pantalla>()
         : MenuService.ObtenerMenuPorUsuario(idUsuario.Value);
+
+    // SEG7: leer minutos de inactividad desde parámetro de BD
+    int sesionMinutos = 5;
+    var paramSesion = ParametroService.ObtenerPorCodigo("SESION_MINUTOS");
+    if (paramSesion != null && int.TryParse(paramSesion.valor, out int minParam) && minParam > 0)
+        sesionMinutos = minParam;
 }
 
 <!DOCTYPE html>
@@ -91,13 +98,11 @@
                                 @nombreUsuario.Substring(0, 1).ToUpper()
                             </div>
 
-                            <a asp-page="/Login/Index"
-                                   asp-page-handler="Logout"
+                            <a href="/Logout"
                                    class="btn btn-outline-danger btn-sm">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Salir
                             </a>
-
                         </div>
 
                     </nav>
@@ -146,8 +151,8 @@
 
         <script>
             (function () {
-                // SEG7: Temporizador de inactividad - 5 minutos (300000 ms)
-                var TIEMPO_INACTIVIDAD = 5 * 60 * 1000;
+                // SEG7: Temporizador de inactividad - leído desde parámetro SESION_MINUTOS
+                var TIEMPO_INACTIVIDAD = @sesionMinutos * 60 * 1000;
                 var timerInactividad;
                 var modalMostrado = false;
 
@@ -166,7 +171,7 @@
 
                 // Redirigir al login al aceptar
                 document.getElementById('btnAceptarSesion').addEventListener('click', function () {
-                    window.location.href = '/Login/Index';
+                    window.location.href = '/Login';
                 });
 
                 // Eventos que reinician el timer de inactividad

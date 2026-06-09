@@ -23,6 +23,8 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
 
         public RolesListaViewModel Lista { get; set; } = new RolesListaViewModel();
 
+        public RolesListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int pagina = 1)
         {
             var resultado = ValidarAcceso();

@@ -42,6 +42,11 @@ namespace SitiosPersonal.Filters
 
             string rutaActual = context.HttpContext.Request.Path.Value ?? string.Empty;
 
+            if (_repository.EsAdministrador(idUsuario.Value))
+            {
+                return next();
+            }
+
             var rutasPermitidas = _repository.ObtenerRutasPermitidas(idUsuario.Value);
 
             bool tienePermiso = rutasPermitidas.Any(ruta =>

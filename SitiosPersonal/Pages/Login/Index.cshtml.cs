@@ -10,13 +10,16 @@ namespace SitiosPersonal.Pages.Login
     {
         private readonly LoginService _repository;
         private readonly EncryptionHelper _encryptionHelper;
+        private readonly ParametroService _parametroService;
 
         public IndexModel(
             LoginService repository,
-            EncryptionHelper encryptionHelper)
+            EncryptionHelper encryptionHelper,
+            ParametroService parametroService)
         {
             _repository = repository;
             _encryptionHelper = encryptionHelper;
+            _parametroService = parametroService;
         }
 
         [BindProperty]
@@ -73,10 +76,13 @@ namespace SitiosPersonal.Pages.Login
 
                 int intentosActuales = usuario.intentos_login + 1;
 
-                if (intentosActuales >= 3)
+                var paramIntentos = _parametroService.ObtenerPorCodigo("MAX_INTENTOS_LOGIN");
+                int maxIntentos = (paramIntentos != null && int.TryParse(paramIntentos.valor, out int v)) ? v : 3;
+
+                if (intentosActuales >= maxIntentos)
                 {
                     _repository.BloquearUsuario(usuario.id_usuario);
-                    Error = "El usuario se bloqueó por fallar 3 intentos.";
+                    Error = $"El usuario se bloqueó por fallar {maxIntentos} intentos.";
                 }
                 else
                 {
@@ -104,16 +110,6 @@ namespace SitiosPersonal.Pages.Login
             );
 
             return RedirectToPage("/Home/Index");
-        }
-
-        public IActionResult OnGetLogout()
-        {
-            HttpContext.Session.Clear();
-            Response.Cookies.Delete("SesionIniciada");
-
-            TempData["Mensaje"] = "Sesión cerrada correctamente.";
-
-            return RedirectToPage("/Login/Index");
         }
     }
 }

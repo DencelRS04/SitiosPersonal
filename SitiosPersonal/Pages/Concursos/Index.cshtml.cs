@@ -23,6 +23,8 @@ namespace SitiosPersonal.Pages.Concursos
 
         public ConcursosListaViewModel Lista { get; set; } = new ConcursosListaViewModel();
 
+        public ConcursosListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int pagina = 1)
         {
             var resultado = ValidarAcceso();

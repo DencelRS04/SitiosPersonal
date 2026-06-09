@@ -23,6 +23,8 @@ namespace SitiosPersonal.Pages.Entrevistas
 
         public EntrevistasListaViewModel Lista { get; set; } = new EntrevistasListaViewModel();
 
+        public EntrevistasListaViewModel ViewModel => Lista;
+
         public IActionResult OnGet(int pagina = 1)
         {
             var resultado = ValidarAcceso();
