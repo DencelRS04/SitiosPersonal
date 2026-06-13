@@ -1,44 +1,37 @@
 @page "{id:int}"
 @model SitiosPersonal.Pages.Puestos.RequisitoPuestos.EditarModel
 @{
-    ViewData["Title"] = "Editar Requisito";
+    ViewData["Title"] = "Formulario Requisito";
 }
 
-<div class="page-header">
-    <div>
-        <a asp-page="Index" asp-route-id="@Model.Input.id_puesto" class="btn btn-outline-secondary btn-sm me-2">
+<form method="post" autocomplete="off">
+    <div class="form-action-panel">
+        <a asp-page="Index" asp-route-id="@Model.Input.id_puesto" class="action-circle" title="Regresar">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <strong>Editar Requisito — @Model.NombrePuesto</strong>
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title mb-4 text-danger"><i class="fas fa-edit me-2"></i>Formulario Requisito</h5>
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Formulario Requisito — @Model.NombrePuesto</h4>
+        </div>
+        <div class="card-body">
 
-        <form method="post">
             <input type="hidden" asp-for="Input.id_requisito" />
             <input type="hidden" asp-for="Input.id_puesto" />
-            <div class="row g-3">
-                <div class="col-12">
-                    <label asp-for="Input.nombre" class="form-label fw-semibold">Nombre del Requisito *</label>
-                    <input asp-for="Input.nombre" class="form-control" />
-                    <span asp-validation-for="Input.nombre" class="text-danger small"></span>
-                </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.nombre" class="form-label">Nombre del Requisito *</label>
+                <input asp-for="Input.nombre" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Input.nombre" class="text-danger"></span>
             </div>
 
-            <div class="mt-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>Guardar
-                </button>
-                <a asp-page="Index" asp-route-id="@Model.Input.id_puesto" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i>Regresar
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

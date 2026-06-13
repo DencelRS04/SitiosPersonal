@@ -45,11 +45,12 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
 
             if (!ModelState.IsValid) return Page();
 
+            var anterior = _requisitoService.ObtenerFormularioEditar(Input.id_requisito);
             _requisitoService.Actualizar(Input);
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
             _bitacoraService.RegistrarUpdate(idUsuario, "RequisitoPuesto",
-                new { id_requisito = Input.id_requisito },
+                new { anterior?.nombre },
                 new { Input.id_requisito, Input.nombre });
 
             TempData["Exito"] = "Requisito actualizado correctamente.";
@@ -65,6 +66,11 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
                     ? "La sesión ha expirado. Por favor inicie sesión nuevamente."
                     : "Por favor inicie sesión para utilizar el sistema";
                 return RedirectToPage("/Login/Index");
+            }
+
+            if (_permisosService.EsAdministrador(idUsuario.Value))
+            {
+                return null;
             }
 
             var rutasPermitidas = _permisosService.ObtenerRutasPermitidas(idUsuario.Value);

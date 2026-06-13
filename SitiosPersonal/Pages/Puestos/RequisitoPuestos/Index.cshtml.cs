@@ -39,17 +39,14 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
             return Page();
         }
 
-        public IActionResult OnPostEliminar(int id)
+        public IActionResult OnPostEliminar(int id, int idRequisito)
         {
             var resultado = ValidarAcceso();
             if (resultado != null) return resultado;
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            var requisito = _requisitoService.ObtenerFormularioEditar(id);
-            int idPuesto = requisito?.id_puesto ?? 0;
-
-            var (exito, error) = _requisitoService.Eliminar(id);
+            var (exito, error) = _requisitoService.Eliminar(idRequisito);
 
             if (!exito)
             {
@@ -57,11 +54,11 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
             }
             else
             {
-                _bitacoraService.RegistrarDelete(idUsuario, "RequisitoPuesto", new { id_requisito = id });
+                _bitacoraService.RegistrarDelete(idUsuario, "RequisitoPuesto", new { id_requisito = idRequisito });
                 TempData["Exito"] = "Requisito eliminado correctamente.";
             }
 
-            return RedirectToPage(new { id = idPuesto });
+            return RedirectToPage(new { id = id });
         }
 
         private IActionResult? ValidarAcceso()
@@ -73,6 +70,11 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
                     ? "La sesión ha expirado. Por favor inicie sesión nuevamente."
                     : "Por favor inicie sesión para utilizar el sistema";
                 return RedirectToPage("/Login/Index");
+            }
+
+            if (_permisosService.EsAdministrador(idUsuario.Value))
+            {
+                return null;
             }
 
             var rutasPermitidas = _permisosService.ObtenerRutasPermitidas(idUsuario.Value);
