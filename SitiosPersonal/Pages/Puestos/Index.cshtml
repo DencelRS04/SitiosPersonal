@@ -39,7 +39,7 @@
                     @foreach (var p in Model.ViewModel.Puestos)
                     {
                         <tr>
-                            <td><code>@p.codigo</code></td>
+                            <td>@p.codigo</td>
                             <td>@p.nombre</td>
                             <td>₡ @p.monto_salario.ToString("N2")</td>
                             <td>@(p.NombreJefatura ?? "<sin jefatura>")</td>
