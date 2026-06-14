@@ -46,7 +46,7 @@ namespace SitiosPersonal.Repository.Repositories
             using var connection = _context.CreateConnection();
 
             string sql = @"
-                SELECT id_puesto, codigo, nombre, salario AS monto_salario, id_puesto_jefe AS id_puesto_jefatura, activo
+                SELECT id_puesto, codigo, nombre, salario AS monto_salario, id_puesto_jefe AS id_puesto_jefatura
                 FROM puesto
                 WHERE id_puesto = @id_puesto;";
 
@@ -82,12 +82,23 @@ namespace SitiosPersonal.Repository.Repositories
         {
             using var connection = _context.CreateConnection();
 
+            int? idArea = connection.ExecuteScalar<int?>("SELECT id_area FROM area ORDER BY id_area LIMIT 1;");
+            if (!idArea.HasValue)
+                throw new InvalidOperationException("Debe existir al menos un area registrada antes de crear puestos.");
+
             string sql = @"
-                INSERT INTO puesto(codigo, nombre, salario, id_puesto_jefe, activo)
-                VALUES(@codigo, @nombre, @monto_salario, @id_puesto_jefatura, 1);
+                INSERT INTO puesto(codigo, nombre, salario, id_puesto_jefe, id_area)
+                VALUES(@codigo, @nombre, @monto_salario, @id_puesto_jefatura, @id_area);
                 SELECT LAST_INSERT_ID();";
 
-            return connection.ExecuteScalar<int>(sql, puesto);
+            return connection.ExecuteScalar<int>(sql, new
+            {
+                puesto.codigo,
+                puesto.nombre,
+                puesto.monto_salario,
+                puesto.id_puesto_jefatura,
+                id_area = idArea.Value
+            });
         }
 
         public void Actualizar(Puesto puesto)
