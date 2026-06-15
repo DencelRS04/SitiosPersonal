@@ -36,13 +36,16 @@ namespace SitiosPersonal.Pages.General.Parametros
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            if (_repository.ExisteCodigo(Parametro.codigo))
+            var parametro = new Parametro { codigo = Parametro.codigo, valor = Parametro.valor };
+
+            // Validación en la capa de negocio
+            var errores = _repository.Validar(parametro);
+            if (errores.Count > 0)
             {
-                ModelState.AddModelError("Parametro.codigo", "Ya existe un parámetro con ese código.");
+                foreach (var error in errores) ModelState.AddModelError(string.Empty, error);
                 return Page();
             }
 
-            var parametro = new Parametro { codigo = Parametro.codigo, valor = Parametro.valor };
             int id = _repository.Crear(parametro);
             parametro.id_parametro = id;
 

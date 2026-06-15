@@ -7,18 +7,15 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
 {
     public class IndexModel : PageModel
     {
-        private readonly RolesService _repository;
-        private readonly BitacoraService _bitacoraService;
-        private readonly PermisosService _permisosRepository;
+        private readonly RolesService _rolesService;
+        private readonly PermisosService _permisosService;
 
         public IndexModel(
-            RolesService repository,
-            BitacoraService bitacoraService,
-            PermisosService permisosRepository)
+            RolesService rolesService,
+            PermisosService permisosService)
         {
-            _repository = repository;
-            _bitacoraService = bitacoraService;
-            _permisosRepository = permisosRepository;
+            _rolesService = rolesService;
+            _permisosService = permisosService;
         }
 
         public RolesListaViewModel Lista { get; set; } = new RolesListaViewModel();
@@ -30,18 +27,8 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
             var resultado = ValidarAcceso();
             if (resultado != null) return resultado;
 
-            int cantidadPorPagina = 10;
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
-
-            Lista = new RolesListaViewModel
-            {
-                Pagina = pagina,
-                CantidadPorPagina = cantidadPorPagina,
-                TotalRegistros = _repository.Contar(),
-                Roles = _repository.ListarPaginado(pagina, cantidadPorPagina)
-            };
-
-            _bitacoraService.RegistrarConsulta(idUsuario, "Roles");
+            Lista = _rolesService.ObtenerListado(pagina, 10, idUsuario);
 
             return Page();
         }
@@ -52,26 +39,14 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
             if (resultado != null) return resultado;
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
-            var rol = _repository.ObtenerPorId(id);
 
-            if (rol == null)
+            bool eliminado = _rolesService.EliminarRol(id, idUsuario, out string? mensajeError);
+
+            if (!eliminado)
             {
+                TempData["Error"] = mensajeError;
                 return RedirectToPage("Index");
             }
-
-            if (!_repository.PuedeEliminar(id))
-            {
-                TempData["Error"] = "No se puede eliminar un registro con datos relacionados.";
-                return RedirectToPage("Index");
-            }
-
-            _repository.Eliminar(id);
-
-            _bitacoraService.RegistrarDelete(
-                idUsuario,
-                "Rol",
-                new { rol.id_rol, rol.nombre }
-            );
 
             TempData["Exito"] = "Rol eliminado correctamente.";
             return RedirectToPage("Index");
@@ -88,7 +63,7 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
                 return RedirectToPage("/Login/Index");
             }
 
-            var rutasPermitidas = _permisosRepository.ObtenerRutasPermitidas(idUsuario.Value);
+            var rutasPermitidas = _permisosService.ObtenerRutasPermitidas(idUsuario.Value);
             bool tienePermiso = rutasPermitidas.Any(ruta =>
                 !string.IsNullOrWhiteSpace(ruta)
                 && Request.Path.Value!.StartsWith(ruta, StringComparison.OrdinalIgnoreCase));

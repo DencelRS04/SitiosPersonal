@@ -1,26 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Services.Helpers;
+using SitiosPersonal.Services.Exceptions;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Usuarios
 {
     public class CrearModel : PageModel
     {
-        private readonly UsuariosService _repository;
-        private readonly BitacoraService _bitacoraService;
-        private readonly EncryptionHelper _encryptionHelper;
+        private readonly UsuariosService _usuariosService;
 
-        public CrearModel(
-            UsuariosService repository,
-            BitacoraService bitacoraService,
-            EncryptionHelper encryptionHelper)
+        public CrearModel(UsuariosService usuariosService)
         {
-            _repository = repository;
-            _bitacoraService = bitacoraService;
-            _encryptionHelper = encryptionHelper;
+            _usuariosService = usuariosService;
         }
 
         [BindProperty]
@@ -38,7 +30,7 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
             {
                 estado = "ACTIVO",
                 password = string.Empty,
-                RolesDisponibles = _repository.ListarRoles(),
+                RolesDisponibles = _usuariosService.ListarRoles(),
                 RolesSeleccionados = new List<int>()
             };
 
@@ -60,39 +52,25 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
 
             if (!ModelState.IsValid)
             {
-                Usuario.RolesDisponibles = _repository.ListarRoles();
+                Usuario.RolesDisponibles = _usuariosService.ListarRoles();
                 return Page();
             }
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            var usuario = new Usuario
+            try
             {
-                usuario = Usuario.usuario,
-                nombre_completo = Usuario.nombre_completo,
-                correo = Usuario.correo,
-                password_hash = _encryptionHelper.Encriptar(Usuario.password!),
-                estado = Usuario.estado
-            };
+                _usuariosService.CrearUsuario(Usuario, idUsuario);
 
-            int idNuevoUsuario = _repository.Crear(usuario, Usuario.RolesSeleccionados);
-            usuario.id_usuario = idNuevoUsuario;
-
-            _bitacoraService.RegistrarInsert(
-                idUsuario,
-                "Usuario",
-                new
-                {
-                    usuario.id_usuario,
-                    usuario.usuario,
-                    usuario.nombre_completo,
-                    usuario.correo,
-                    usuario.estado,
-                    roles = Usuario.RolesSeleccionados
-                });
-
-            TempData["Exito"] = "Usuario creado correctamente.";
-            return RedirectToPage("Index");
+                TempData["Exito"] = "Usuario creado correctamente.";
+                return RedirectToPage("Index");
+            }
+            catch (ValidacionException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                Usuario.RolesDisponibles = _usuariosService.ListarRoles();
+                return Page();
+            }
         }
     }
 }

@@ -2,19 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
+using SitiosPersonal.Services.Exceptions;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Roles
 {
     public class CrearModel : PageModel
     {
-        private readonly RolesService _repository;
-        private readonly BitacoraService _bitacoraService;
+        private readonly RolesService _rolesService;
 
-        public CrearModel(RolesService repository, BitacoraService bitacoraService)
+        public CrearModel(RolesService rolesService)
         {
-            _repository = repository;
-            _bitacoraService = bitacoraService;
+            _rolesService = rolesService;
         }
 
         [BindProperty]
@@ -28,15 +27,21 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
                 return RedirectToPage("/Login/Index");
             }
 
-            Rol.PantallasDisponibles = _repository.ListarPantallas();
+            Rol.PantallasDisponibles = _rolesService.ListarPantallas();
             return Page();
         }
 
         public IActionResult OnPost()
         {
+            if (HttpContext.Session.GetInt32("IdUsuario") == null)
+            {
+                TempData["Mensaje"] = "Por favor inicie sesión para utilizar el sistema";
+                return RedirectToPage("/Login/Index");
+            }
+
             if (!ModelState.IsValid)
             {
-                Rol.PantallasDisponibles = _repository.ListarPantallas();
+                Rol.PantallasDisponibles = _rolesService.ListarPantallas();
                 return Page();
             }
 
@@ -48,17 +53,19 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
                 activo = true
             };
 
-            int idRol = _repository.Crear(rol, Rol.PantallasSeleccionadas);
-            rol.id_rol = idRol;
+            try
+            {
+                _rolesService.CrearRol(rol, Rol.PantallasSeleccionadas, idUsuario);
 
-            _bitacoraService.RegistrarInsert(
-                idUsuario,
-                "Rol",
-                new { rol.id_rol, rol.nombre, pantallas = Rol.PantallasSeleccionadas }
-            );
-
-            TempData["Exito"] = "Rol creado correctamente.";
-            return RedirectToPage("Index");
+                TempData["Exito"] = "Rol creado correctamente.";
+                return RedirectToPage("Index");
+            }
+            catch (ValidacionException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                Rol.PantallasDisponibles = _rolesService.ListarPantallas();
+                return Page();
+            }
         }
     }
 }

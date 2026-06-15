@@ -36,13 +36,16 @@ namespace SitiosPersonal.Pages.General.InstitucionesEducativas
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            if (_repository.ExisteCodigo(Institucion.codigo))
+            var institucion = new InstitucionEducativa { codigo = Institucion.codigo, nombre = Institucion.nombre };
+
+            // Validación en la capa de negocio
+            var errores = _repository.Validar(institucion);
+            if (errores.Count > 0)
             {
-                ModelState.AddModelError("Institucion.codigo", "Ya existe una institución con ese código.");
+                foreach (var error in errores) ModelState.AddModelError(string.Empty, error);
                 return Page();
             }
 
-            var institucion = new InstitucionEducativa { codigo = Institucion.codigo, nombre = Institucion.nombre };
             int id = _repository.Crear(institucion);
             institucion.id_institucion = id;
 

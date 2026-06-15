@@ -1,26 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
-using SitiosPersonal.Services.Helpers;
+using SitiosPersonal.Services.Exceptions;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Usuarios
 {
     public class EditarModel : PageModel
     {
-        private readonly UsuariosService _repository;
-        private readonly BitacoraService _bitacoraService;
-        private readonly EncryptionHelper _encryptionHelper;
+        private readonly UsuariosService _usuariosService;
 
-        public EditarModel(
-            UsuariosService repository,
-            BitacoraService bitacoraService,
-            EncryptionHelper encryptionHelper)
+        public EditarModel(UsuariosService usuariosService)
         {
-            _repository = repository;
-            _bitacoraService = bitacoraService;
-            _encryptionHelper = encryptionHelper;
+            _usuariosService = usuariosService;
         }
 
         [BindProperty]
@@ -34,26 +26,11 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
                 return RedirectToPage("/Login/Index");
             }
 
-            var usuario = _repository.ObtenerPorId(id);
+            var usuario = _usuariosService.ObtenerPorId(id);
 
             if (usuario == null)
             {
                 return RedirectToPage("Index");
-            }
-
-            string passwordDesencriptado = string.Empty;
-
-            if (!string.IsNullOrWhiteSpace(usuario.password_hash) &&
-                usuario.password_hash.StartsWith("AESGCM:"))
-            {
-                try
-                {
-                    passwordDesencriptado = _encryptionHelper.Desencriptar(usuario.password_hash);
-                }
-                catch
-                {
-                    passwordDesencriptado = string.Empty;
-                }
             }
 
             Usuario = new UsuarioViewModel
@@ -62,10 +39,14 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
                 usuario = usuario.usuario,
                 nombre_completo = usuario.nombre_completo,
                 correo = usuario.correo,
-                password = passwordDesencriptado,
+
+                // No se carga la contraseña real.
+                // En la vista se muestra ******** como placeholder.
+                password = string.Empty,
+
                 estado = usuario.estado,
-                RolesDisponibles = _repository.ListarRoles(),
-                RolesSeleccionados = _repository.ObtenerRolesDelUsuario(id)
+                RolesDisponibles = _usuariosService.ListarRoles(),
+                RolesSeleccionados = _usuariosService.ObtenerRolesDelUsuario(id)
             };
 
             return Page();
@@ -79,66 +60,40 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
                 return RedirectToPage("/Login/Index");
             }
 
+            /*
+             * En edición la contraseña no es obligatoria.
+             * Si viene vacía, el Service conserva la contraseña actual.
+             * Si viene con valor, el Service la valida, la encripta y la actualiza.
+             */
+            if (string.IsNullOrWhiteSpace(Usuario.password))
+            {
+                ModelState.Remove("Usuario.password");
+            }
+
             if (!ModelState.IsValid)
             {
-                Usuario.RolesDisponibles = _repository.ListarRoles();
+                Usuario.RolesDisponibles = _usuariosService.ListarRoles();
                 return Page();
             }
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            var usuarioAnterior = _repository.ObtenerPorId(id);
-
-            if (usuarioAnterior == null)
+            try
             {
+                _usuariosService.ActualizarUsuario(id, Usuario, idUsuario);
+
+                TempData["Exito"] = "Usuario actualizado correctamente.";
                 return RedirectToPage("Index");
             }
-
-            var rolesAnteriores = _repository.ObtenerRolesDelUsuario(id);
-
-            string passwordFinal = usuarioAnterior.password_hash;
-
-            if (!string.IsNullOrWhiteSpace(Usuario.password))
+            catch (ValidacionException ex)
             {
-                passwordFinal = _encryptionHelper.Encriptar(Usuario.password);
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+                Usuario.id_usuario = id;
+                Usuario.RolesDisponibles = _usuariosService.ListarRoles();
+
+                return Page();
             }
-
-            var usuarioActual = new Usuario
-            {
-                id_usuario = id,
-                usuario = Usuario.usuario,
-                nombre_completo = Usuario.nombre_completo,
-                correo = Usuario.correo,
-                password_hash = passwordFinal,
-                estado = Usuario.estado
-            };
-
-            _repository.Actualizar(usuarioActual, Usuario.RolesSeleccionados);
-
-            _bitacoraService.RegistrarUpdate(
-                idUsuario,
-                "Usuario",
-                new
-                {
-                    usuarioAnterior.id_usuario,
-                    usuarioAnterior.usuario,
-                    usuarioAnterior.nombre_completo,
-                    usuarioAnterior.correo,
-                    usuarioAnterior.estado,
-                    roles = rolesAnteriores
-                },
-                new
-                {
-                    usuarioActual.id_usuario,
-                    usuarioActual.usuario,
-                    usuarioActual.nombre_completo,
-                    usuarioActual.correo,
-                    usuarioActual.estado,
-                    roles = Usuario.RolesSeleccionados
-                });
-
-            TempData["Exito"] = "Usuario actualizado correctamente.";
-            return RedirectToPage("Index");
         }
     }
 }

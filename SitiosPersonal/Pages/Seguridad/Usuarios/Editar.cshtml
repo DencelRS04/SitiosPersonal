@@ -24,6 +24,8 @@
 
             <input type="hidden" asp-for="Usuario.id_usuario" />
 
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
             <div class="mb-3">
                 <label class="form-label">Nombre de usuario</label>
                 <input asp-for="Usuario.usuario"
@@ -54,7 +56,13 @@
                        type="password"
                        class="form-control"
                        autocomplete="new-password"
-                       value="@Model.Usuario.password" />
+                       placeholder="********"
+                       oncopy="return false"
+                       oncut="return false"
+                       onpaste="return false"
+                       oncontextmenu="return false" />
+                <small class="text-muted">
+                </small>
                 <span asp-validation-for="Usuario.password" class="text-danger"></span>
             </div>
 
