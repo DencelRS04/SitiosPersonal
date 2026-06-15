@@ -2,19 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SitiosPersonal.Entities.Models;
 using SitiosPersonal.Entities.ViewModels;
+using SitiosPersonal.Services.Exceptions;
 using SitiosPersonal.Services.Services;
 
 namespace SitiosPersonal.Pages.Seguridad.Roles
 {
     public class EditarModel : PageModel
     {
-        private readonly RolesService _repository;
-        private readonly BitacoraService _bitacoraService;
+        private readonly RolesService _rolesService;
 
-        public EditarModel(RolesService repository, BitacoraService bitacoraService)
+        public EditarModel(RolesService rolesService)
         {
-            _repository = repository;
-            _bitacoraService = bitacoraService;
+            _rolesService = rolesService;
         }
 
         [BindProperty]
@@ -28,7 +27,8 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
                 return RedirectToPage("/Login/Index");
             }
 
-            var rol = _repository.ObtenerPorId(id);
+            var rol = _rolesService.ObtenerPorId(id);
+
             if (rol == null)
             {
                 return RedirectToPage("Index");
@@ -39,8 +39,8 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
                 id_rol = rol.id_rol,
                 nombre = rol.nombre,
                 activo = rol.activo,
-                PantallasDisponibles = _repository.ListarPantallas(),
-                PantallasSeleccionadas = _repository.ObtenerPantallasDelRol(id)
+                PantallasDisponibles = _rolesService.ListarPantallas(),
+                PantallasSeleccionadas = _rolesService.ObtenerPantallasDelRol(id)
             };
 
             return Page();
@@ -48,20 +48,19 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
 
         public IActionResult OnPost(int id)
         {
+            if (HttpContext.Session.GetInt32("IdUsuario") == null)
+            {
+                TempData["Mensaje"] = "Por favor inicie sesión para utilizar el sistema";
+                return RedirectToPage("/Login/Index");
+            }
+
             if (!ModelState.IsValid)
             {
-                Rol.PantallasDisponibles = _repository.ListarPantallas();
+                Rol.PantallasDisponibles = _rolesService.ListarPantallas();
                 return Page();
             }
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
-            var rolAnterior = _repository.ObtenerPorId(id);
-            var pantallasAnteriores = _repository.ObtenerPantallasDelRol(id);
-
-            if (rolAnterior == null)
-            {
-                return RedirectToPage("Index");
-            }
 
             var rolActual = new Rol
             {
@@ -70,17 +69,22 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
                 activo = Rol.activo
             };
 
-            _repository.Actualizar(rolActual, Rol.PantallasSeleccionadas);
+            try
+            {
+                _rolesService.ActualizarRol(rolActual, Rol.PantallasSeleccionadas, idUsuario);
 
-            _bitacoraService.RegistrarUpdate(
-                idUsuario,
-                "Rol",
-                new { rolAnterior.id_rol, rolAnterior.nombre, pantallas = pantallasAnteriores },
-                new { rolActual.id_rol, rolActual.nombre, pantallas = Rol.PantallasSeleccionadas }
-            );
+                TempData["Exito"] = "Rol actualizado correctamente.";
+                return RedirectToPage("Index");
+            }
+            catch (ValidacionException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
 
-            TempData["Exito"] = "Rol actualizado correctamente.";
-            return RedirectToPage("Index");
+                Rol.id_rol = id;
+                Rol.PantallasDisponibles = _rolesService.ListarPantallas();
+
+                return Page();
+            }
         }
     }
 }
