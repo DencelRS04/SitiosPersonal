@@ -21,6 +21,8 @@
             <h4 class="crud-card-title">Formulario Institución Educativa</h4>
         </div>
         <div class="card-body">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
             <div class="mb-3">
                 <label class="form-label">Código</label>
                 <input asp-for="Institucion.codigo" class="form-control" maxlength="50" />

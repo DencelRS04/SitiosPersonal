@@ -48,13 +48,16 @@ namespace SitiosPersonal.Pages.General.Companias
             var anterior = _repository.ObtenerPorId(id);
             if (anterior == null) return RedirectToPage("Index");
 
-            if (_repository.ExisteCodigo(Compania.codigo, id))
+            var actual = new Compania { id_compania = id, codigo = Compania.codigo, nombre = Compania.nombre };
+
+            // Validación en la capa de negocio
+            var errores = _repository.Validar(actual, id);
+            if (errores.Count > 0)
             {
-                ModelState.AddModelError("Compania.codigo", "Ya existe una compañía con ese código.");
+                foreach (var error in errores) ModelState.AddModelError(string.Empty, error);
                 return Page();
             }
 
-            var actual = new Compania { id_compania = id, codigo = Compania.codigo, nombre = Compania.nombre };
             _repository.Actualizar(actual);
 
             _bitacoraService.RegistrarUpdate(idUsuario, "Compañía",

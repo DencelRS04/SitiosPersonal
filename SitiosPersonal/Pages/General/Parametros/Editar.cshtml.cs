@@ -49,13 +49,16 @@ namespace SitiosPersonal.Pages.General.Parametros
             var anterior = _repository.ObtenerPorId(id);
             if (anterior == null) return RedirectToPage("Index");
 
-            if (_repository.ExisteCodigo(Parametro.codigo, id))
+            var actual = new Parametro { id_parametro = id, codigo = Parametro.codigo, valor = Parametro.valor };
+
+            // Validación en la capa de negocio
+            var errores = _repository.Validar(actual, id);
+            if (errores.Count > 0)
             {
-                ModelState.AddModelError("Parametro.codigo", "Ya existe un parámetro con ese código.");
+                foreach (var error in errores) ModelState.AddModelError(string.Empty, error);
                 return Page();
             }
 
-            var actual = new Parametro { id_parametro = id, codigo = Parametro.codigo, valor = Parametro.valor };
             _repository.Actualizar(actual);
 
             _bitacoraService.RegistrarUpdate(idUsuario, "Parámetro",

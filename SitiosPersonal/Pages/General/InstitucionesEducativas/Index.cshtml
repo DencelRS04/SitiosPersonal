@@ -33,7 +33,6 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th style="width:80px;">ID</th>
                         <th style="width:140px;">Código</th>
                         <th>Nombre</th>
                         <th style="width:140px;">Acciones</th>
@@ -45,7 +44,6 @@
                         foreach (var item in Model.Lista.Instituciones)
                         {
                             <tr>
-                                <td>@item.id_institucion</td>
                                 <td>@item.codigo</td>
                                 <td>@item.nombre</td>
                                 <td>
@@ -67,7 +65,7 @@
                     }
                     else
                     {
-                        <tr><td colspan="4" class="text-center text-muted">No se encontraron registros.</td></tr>
+                        <tr><td colspan="3" class="text-center text-muted">No se encontraron registros.</td></tr>
                     }
                 </tbody>
             </table>

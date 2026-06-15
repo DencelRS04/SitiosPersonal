@@ -48,13 +48,16 @@ namespace SitiosPersonal.Pages.General.InstitucionesEducativas
             var anterior = _repository.ObtenerPorId(id);
             if (anterior == null) return RedirectToPage("Index");
 
-            if (_repository.ExisteCodigo(Institucion.codigo, id))
+            var actual = new InstitucionEducativa { id_institucion = id, codigo = Institucion.codigo, nombre = Institucion.nombre };
+
+            // Validación en la capa de negocio
+            var errores = _repository.Validar(actual, id);
+            if (errores.Count > 0)
             {
-                ModelState.AddModelError("Institucion.codigo", "Ya existe una institución con ese código.");
+                foreach (var error in errores) ModelState.AddModelError(string.Empty, error);
                 return Page();
             }
 
-            var actual = new InstitucionEducativa { id_institucion = id, codigo = Institucion.codigo, nombre = Institucion.nombre };
             _repository.Actualizar(actual);
 
             _bitacoraService.RegistrarUpdate(idUsuario, "Institución Educativa",

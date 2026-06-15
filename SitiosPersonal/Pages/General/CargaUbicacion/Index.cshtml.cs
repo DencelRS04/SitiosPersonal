@@ -19,16 +19,11 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
             _permisosRepository = permisosRepository;
         }
 
-        public IEnumerable<Provincia> Provincias { get; set; } = new List<Provincia>();
-        public IEnumerable<dynamic> Cantones { get; set; } = new List<dynamic>();
-        public IEnumerable<dynamic> Distritos { get; set; } = new List<dynamic>();
-
         public IActionResult OnGet()
         {
             var resultado = ValidarAcceso();
             if (resultado != null) return resultado;
 
-            CargarListas();
             return Page();
         }
 
@@ -39,13 +34,13 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
+            // Validación de presentación: archivo presente y con extensión .csv
             if (archivo == null || archivo.Length == 0)
             {
                 TempData["Error"] = "Debe seleccionar un archivo válido.";
                 return RedirectToPage("Index");
             }
 
-            // Validar extensión .csv únicamente
             var extension = System.IO.Path.GetExtension(archivo.FileName).ToLowerInvariant();
             if (extension != ".csv")
             {
@@ -55,75 +50,22 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
 
             try
             {
-                using var reader = new System.IO.StreamReader(archivo.OpenReadStream());
-
-                // --- Validar encabezado obligatorio exacto ---
-                var encabezado = reader.ReadLine()?.Trim();
-                if (encabezado == null || !encabezado.Equals("Provincia,Canton,Distrito", StringComparison.OrdinalIgnoreCase))
+                // Lectura del archivo (presentación)
+                var lineas = new List<string>();
+                using (var reader = new System.IO.StreamReader(archivo.OpenReadStream()))
                 {
-                    TempData["Error"] = "El archivo no tiene el encabezado requerido. La primera línea debe ser exactamente: Provincia,Canton,Distrito";
+                    while (!reader.EndOfStream)
+                        lineas.Add(reader.ReadLine() ?? "");
+                }
+
+                // Validación en la capa de negocio
+                var validacion = _ubicacionService.ValidarArchivo(lineas);
+                if (!validacion.EsValido)
+                {
+                    TempData["Error"] = validacion.Error;
                     return RedirectToPage("Index");
                 }
 
-                // --- Leer todas las líneas y validar formato estricto antes de procesar ---
-                var lineasValidas = new List<(string provincia, string canton, string distrito)>();
-                int numeroLinea = 1; // empieza en 2 considerando el encabezado
-
-                while (!reader.EndOfStream)
-                {
-                    numeroLinea++;
-                    var linea = reader.ReadLine();
-
-                    // Saltar líneas completamente vacías
-                    if (string.IsNullOrWhiteSpace(linea)) continue;
-
-                    // Detectar delimitadores no permitidos (punto y coma, tabulador, pipe)
-                    if (linea.Contains(';') || linea.Contains('\t') || linea.Contains('|'))
-                    {
-                        TempData["Error"] = $"Línea {numeroLinea}: se detectó un delimitador no permitido. Use únicamente coma (,) como separador.";
-                        return RedirectToPage("Index");
-                    }
-
-                    var partes = linea.Split(',');
-
-                    // Debe tener exactamente 3 columnas
-                    if (partes.Length != 3)
-                    {
-                        TempData["Error"] = $"Línea {numeroLinea}: se encontraron {partes.Length} columna(s). El archivo debe tener exactamente 3 columnas: Provincia,Canton,Distrito.";
-                        return RedirectToPage("Index");
-                    }
-
-                    string nombreProvincia = partes[0].Trim();
-                    string nombreCanton = partes[1].Trim();
-                    string nombreDistrito = partes[2].Trim();
-
-                    // Ningún campo puede estar vacío
-                    if (string.IsNullOrWhiteSpace(nombreProvincia))
-                    {
-                        TempData["Error"] = $"Línea {numeroLinea}: el campo Provincia está vacío.";
-                        return RedirectToPage("Index");
-                    }
-                    if (string.IsNullOrWhiteSpace(nombreCanton))
-                    {
-                        TempData["Error"] = $"Línea {numeroLinea}: el campo Canton está vacío.";
-                        return RedirectToPage("Index");
-                    }
-                    if (string.IsNullOrWhiteSpace(nombreDistrito))
-                    {
-                        TempData["Error"] = $"Línea {numeroLinea}: el campo Distrito está vacío.";
-                        return RedirectToPage("Index");
-                    }
-
-                    lineasValidas.Add((nombreProvincia, nombreCanton, nombreDistrito));
-                }
-
-                if (lineasValidas.Count == 0)
-                {
-                    TempData["Error"] = "El archivo no contiene datos de ubicación.";
-                    return RedirectToPage("Index");
-                }
-
-                // --- Procesar registros validados ---
                 int provincias = 0, cantones = 0, distritos = 0;
 
                 var provinciaMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -143,9 +85,8 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
                 if (distritosExistentes.Count > 0)
                     nextDistritoId = ((IEnumerable<dynamic>)distritosExistentes).Max(d => (int)d.id_distrito) + 1;
 
-                foreach (var (nombreProvincia, nombreCanton, nombreDistrito) in lineasValidas)
+                foreach (var (nombreProvincia, nombreCanton, nombreDistrito) in validacion.Lineas)
                 {
-                    // Provincia
                     if (!provinciaMap.TryGetValue(nombreProvincia, out int idProvincia))
                     {
                         idProvincia = nextProvinciaId++;
@@ -154,7 +95,6 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
                         provincias++;
                     }
 
-                    // Cantón
                     string cantonKey = $"{nombreProvincia}|{nombreCanton}";
                     if (!cantonMap.TryGetValue(cantonKey, out int idCanton))
                     {
@@ -164,13 +104,12 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
                         cantones++;
                     }
 
-                    // Distrito
                     _ubicacionService.UpsertDistrito(new Distrito { id_distrito = nextDistritoId++, id_canton = idCanton, nombre = nombreDistrito });
                     distritos++;
                 }
 
                 _bitacoraService.RegistrarInsert(idUsuario, "CargaUbicacion",
-                    new { descripcion = "Se realizó la carga de información de ubicación.", provincias, cantones, distritos });
+                    new { descripcion = "Se realizó la carga de información de ubicación." });
 
                 TempData["Exito"] = $"Carga completada: {provincias} provincia(s), {cantones} cantón(es), {distritos} distrito(s) procesados.";
             }
@@ -181,13 +120,6 @@ namespace SitiosPersonal.Pages.General.CargaUbicacion
             }
 
             return RedirectToPage("Index");
-        }
-
-        private void CargarListas()
-        {
-            Provincias = _ubicacionService.ListarProvincias();
-            Cantones = _ubicacionService.ListarCantones();
-            Distritos = _ubicacionService.ListarDistritos();
         }
 
         private IActionResult? ValidarAcceso()

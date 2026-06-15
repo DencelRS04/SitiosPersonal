@@ -36,13 +36,16 @@ namespace SitiosPersonal.Pages.General.Companias
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
-            if (_repository.ExisteCodigo(Compania.codigo))
+            var compania = new Compania { codigo = Compania.codigo, nombre = Compania.nombre };
+
+            // Validación en la capa de negocio
+            var errores = _repository.Validar(compania);
+            if (errores.Count > 0)
             {
-                ModelState.AddModelError("Compania.codigo", "Ya existe una compañía con ese código.");
+                foreach (var error in errores) ModelState.AddModelError(string.Empty, error);
                 return Page();
             }
 
-            var compania = new Compania { codigo = Compania.codigo, nombre = Compania.nombre };
             int id = _repository.Crear(compania);
             compania.id_compania = id;
 
