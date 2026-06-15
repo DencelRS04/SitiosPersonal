@@ -69,6 +69,11 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
                 return RedirectToPage("/Login/Index");
             }
 
+            if (_permisosService.EsAdministrador(idUsuario.Value))
+            {
+                return null;
+            }
+
             var rutasPermitidas = _permisosService.ObtenerRutasPermitidas(idUsuario.Value);
             bool tienePermiso = rutasPermitidas.Any(ruta =>
                 !string.IsNullOrWhiteSpace(ruta) &&

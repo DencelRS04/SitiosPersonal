@@ -1,64 +1,57 @@
 @page
 @model SitiosPersonal.Pages.Puestos.CrearModel
 @{
-    ViewData["Title"] = "Nuevo Puesto";
+    ViewData["Title"] = "Formulario Puesto";
 }
 
-<div class="page-header">
-    <div>
-        <a asp-page="Index" class="btn btn-outline-secondary btn-sm me-2">
+<form method="post" autocomplete="off">
+    <div class="form-action-panel">
+        <a asp-page="Index" class="action-circle" title="Regresar">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <strong>Nuevo Puesto</strong>
+        <button type="submit" class="action-circle" title="Guardar">
+            <i class="fas fa-save"></i>
+        </button>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title mb-4 text-danger"><i class="fas fa-briefcase me-2"></i>Formulario Puesto</h5>
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Formulario Puesto</h4>
+        </div>
+        <div class="card-body">
 
-        <form method="post">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label asp-for="Input.codigo" class="form-label fw-semibold">Código *</label>
-                    <input asp-for="Input.codigo" class="form-control" placeholder="Ej. PUE-001" />
-                    <span asp-validation-for="Input.codigo" class="text-danger small"></span>
-                </div>
-                <div class="col-md-8">
-                    <label asp-for="Input.nombre" class="form-label fw-semibold">Nombre *</label>
-                    <input asp-for="Input.nombre" class="form-control" placeholder="Nombre del puesto" />
-                    <span asp-validation-for="Input.nombre" class="text-danger small"></span>
-                </div>
-                <div class="col-md-4">
-                    <label asp-for="Input.monto_salario" class="form-label fw-semibold">Monto Salario *</label>
-                    <div class="input-group">
-                        <span class="input-group-text">₡</span>
-                        <input asp-for="Input.monto_salario" class="form-control" type="number" step="0.01" min="0" />
-                    </div>
-                    <span asp-validation-for="Input.monto_salario" class="text-danger small"></span>
-                </div>
-                <div class="col-md-8">
-                    <label asp-for="Input.id_puesto_jefatura" class="form-label fw-semibold">Puesto Jefatura (opcional)</label>
-                    <select asp-for="Input.id_puesto_jefatura" class="form-select"
-                            asp-items="@(new SelectList(Model.PuestosDisponibles, "id_puesto", "nombre"))">
-                        <option value="">-- Sin jefatura --</option>
-                    </select>
-                </div>
+            <div class="mb-3">
+                <label asp-for="Input.codigo" class="form-label">Código *</label>
+                <input asp-for="Input.codigo" class="form-control" placeholder="Ej. PUE-001" autocomplete="off" />
+                <span asp-validation-for="Input.codigo" class="text-danger"></span>
             </div>
 
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger mt-3 d-none"></div>
-
-            <div class="mt-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>Guardar
-                </button>
-                <a asp-page="Index" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i>Regresar
-                </a>
+            <div class="mb-3">
+                <label asp-for="Input.nombre" class="form-label">Nombre *</label>
+                <input asp-for="Input.nombre" class="form-control" placeholder="Nombre del puesto" autocomplete="off" />
+                <span asp-validation-for="Input.nombre" class="text-danger"></span>
             </div>
-        </form>
+
+            <div class="mb-3">
+                <label asp-for="Input.monto_salario" class="form-label">Monto Salario *</label>
+                <div class="input-group">
+                    <span class="input-group-text">₡</span>
+                    <input asp-for="Input.monto_salario" class="form-control" type="number" step="0.01" min="0" />
+                </div>
+                <span asp-validation-for="Input.monto_salario" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.id_puesto_jefatura" class="form-label">Puesto Jefatura (opcional)</label>
+                <select asp-for="Input.id_puesto_jefatura" class="form-select"
+                        asp-items="@(new SelectList(Model.PuestosDisponibles, "id_puesto", "nombre"))">
+                    <option value="">-- Sin jefatura --</option>
+                </select>
+            </div>
+
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

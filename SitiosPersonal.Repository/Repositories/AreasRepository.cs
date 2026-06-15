@@ -41,7 +41,7 @@ namespace SitiosPersonal.Repository.Repositories
             return connection.ExecuteScalar<int>("SELECT COUNT(*) FROM area;");
         }
 
-        public Area ObtenerPorId(int id_area)
+        public Area? ObtenerPorId(int id_area)
         {
             using var connection = _context.CreateConnection();
 
@@ -70,12 +70,17 @@ namespace SitiosPersonal.Repository.Repositories
         {
             using var connection = _context.CreateConnection();
 
-            string sql = @"
-                INSERT INTO area(codigo, nombre, id_jefatura)
-                VALUES(@codigo, @nombre, @id_empleado_jefatura);
-                SELECT LAST_INSERT_ID();";
+            // Generar el siguiente ID disponible
+            int nuevoId = connection.ExecuteScalar<int>("SELECT COALESCE(MAX(id_area), 0) + 1 FROM area;");
+            
+            area.id_area = nuevoId;
 
-            return connection.ExecuteScalar<int>(sql, area);
+            string sql = @"
+                INSERT INTO area(id_area, codigo, nombre, id_jefatura)
+                VALUES(@id_area, @codigo, @nombre, @id_empleado_jefatura);";
+
+            connection.Execute(sql, area);
+            return nuevoId;
         }
 
         public void Actualizar(Area area)
