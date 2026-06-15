@@ -1,2 +1,66 @@
-﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(function () {
+        var $form = $('form');
+        var validator = $form.data('validator');
+
+        // Suprimir los errores inline para que no aparezcan debajo de los campos
+        if (validator) {
+            validator.settings.errorPlacement = function () {};
+        }
+
+        // Interceptar el submit en fase de CAPTURA (antes que jQuery Validate)
+        var formEl = $form[0];
+        if (formEl) {
+            formEl.addEventListener('submit', function (e) {
+                if (!$form.valid()) {
+                    // Detener todo: no enviar, no dejar correr otros handlers
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    var v = $form.data('validator');
+                    var errors = v ? v.errorList : [];
+                    var lista = document.getElementById('listaErroresValidacion');
+                    lista.innerHTML = '';
+                    errors.forEach(function (error) {
+                        var li = document.createElement('li');
+                        li.textContent = error.message;
+                        lista.appendChild(li);
+                    });
+
+                    new bootstrap.Modal(document.getElementById('modalValidacion')).show();
+                }
+            }, true); // true = fase de captura, corre ANTES que los handlers de jQuery
+        }
+
+        // ── Validación servidor: errores devueltos tras POST fallido ─────────
+        var serverErrors = [];
+
+        document.querySelectorAll('span.field-validation-error').forEach(function (span) {
+            var msg = span.textContent.trim();
+            if (msg) serverErrors.push(msg);
+        });
+
+        document.querySelectorAll('[data-valmsg-summary] li').forEach(function (li) {
+            var msg = li.textContent.trim();
+            if (msg && serverErrors.indexOf(msg) === -1) serverErrors.push(msg);
+        });
+
+        if (serverErrors.length > 0) {
+            var lista = document.getElementById('listaErroresValidacion');
+            lista.innerHTML = '';
+            serverErrors.forEach(function (msg) {
+                var li = document.createElement('li');
+                li.textContent = msg;
+                lista.appendChild(li);
+            });
+            document.querySelectorAll('span.field-validation-error').forEach(function (span) {
+                span.classList.add('visually-hidden');
+            });
+            new bootstrap.Modal(document.getElementById('modalValidacion')).show();
+        }
+    });
+</script>
