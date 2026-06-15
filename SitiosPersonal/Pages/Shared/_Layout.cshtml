@@ -183,6 +183,25 @@
                 reiniciarTimer();
             })();
         </script>
+
+        <!-- Modal de errores de validación -->
+        <div class="modal fade" id="modalValidacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">
+                            <i class=""></i>Errores 
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="listaErroresValidacion" class="mb-0"></ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 
 </body>
