@@ -4,25 +4,26 @@
     ViewData["Title"] = "Contratar Empleado";
 }
 
-<div class="page-header">
-    <div>
-        <a asp-page="Index" class="btn btn-outline-secondary btn-sm me-2">
+<form method="post">
+    <div class="form-action-panel">
+        <a asp-page="Index" class="action-circle" title="Regresar">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <strong>Contratar Empleado</strong>
+
+        <button type="submit" class="action-circle" title="Contratar">
+            <i class="fas fa-save"></i>
+        </button>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title mb-4 text-danger">
-            <i class="fas fa-user-plus me-2"></i>Formulario de Contratación
-        </h5>
+    <div class="form-card card">
+        <div class="crud-card-header">
+            <h4 class="crud-card-title">Formulario de Contratación</h4>
+        </div>
 
-        <form method="post">
+        <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label asp-for="Input.id_oferente" class="form-label fw-semibold">Oferente *</label>
+                    <label asp-for="Input.id_oferente" class="form-label">Oferente *</label>
                     <select asp-for="Input.id_oferente" class="form-select"
                             asp-items="@(new SelectList(Model.OferentesDisponibles, "id_oferente", "nombre_completo"))">
                         <option value="">-- Seleccione un oferente --</option>
@@ -31,7 +32,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label asp-for="Input.id_puesto" class="form-label fw-semibold">Puesto *</label>
+                    <label asp-for="Input.id_puesto" class="form-label">Puesto *</label>
                     <select asp-for="Input.id_puesto" class="form-select"
                             asp-items="@(new SelectList(Model.PuestosDisponibles, "id_puesto", "nombre"))">
                         <option value="">-- Seleccione un puesto --</option>
@@ -46,18 +47,9 @@
                     <div asp-validation-summary="ModelOnly"></div>
                 </div>
             }
-
-            <div class="mt-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>Contratar
-                </button>
-                <a asp-page="Index" class="btn btn-outline-secondary">
-                    <i class="fas fa-times me-1"></i>Cancelar
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
