@@ -76,7 +76,34 @@ namespace SitiosPersonal.Repository.Repositories
 
         public bool PuedeEliminar(int id_requisito)
         {
-            // Los requisitos de puesto no tienen tablas hijas
+            using var connection = _context.CreateConnection();
+
+            string relacionesSql = @"
+                SELECT DISTINCT TABLE_NAME AS Tabla, COLUMN_NAME AS Columna
+                FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND COLUMN_NAME = 'id_requisito'
+                  AND TABLE_NAME <> 'requisito_puesto';";
+
+            var relaciones = connection.Query(relacionesSql);
+
+            foreach (var relacion in relaciones)
+            {
+                string tabla = relacion.Tabla;
+                string columna = relacion.Columna;
+
+                string conteoSql = $@"
+                    SELECT COUNT(*)
+                    FROM `{tabla}`
+                    WHERE `{columna}` = @id_requisito;";
+
+                int total = connection.ExecuteScalar<int>(conteoSql, new { id_requisito });
+                if (total > 0)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 

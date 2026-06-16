@@ -8,11 +8,11 @@ namespace SitiosPersonal.Entities.ViewModels
 
         public int id_puesto { get; set; }
 
-        public string NombrePuesto { get; set; }
+        public string NombrePuesto { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "El nombre del requisito es obligatorio")]
         [StringLength(200, ErrorMessage = "El nombre no puede superar los 200 caracteres")]
-        public string nombre { get; set; }
+        public string nombre { get; set; } = string.Empty;
     }
 
     public class RequisitoPuestoListaViewModel
@@ -21,7 +21,7 @@ namespace SitiosPersonal.Entities.ViewModels
 
         public int id_puesto { get; set; }
 
-        public string NombrePuesto { get; set; }
+        public string NombrePuesto { get; set; } = string.Empty;
 
         public int Pagina { get; set; }
 
@@ -38,6 +38,6 @@ namespace SitiosPersonal.Entities.ViewModels
 
         public int id_puesto { get; set; }
 
-        public string nombre { get; set; }
+        public string nombre { get; set; } = string.Empty;
     }
 }

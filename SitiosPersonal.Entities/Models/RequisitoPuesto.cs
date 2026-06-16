@@ -6,6 +6,6 @@ namespace SitiosPersonal.Entities.Models
 
         public int id_puesto { get; set; }
 
-        public string nombre { get; set; }
+        public string nombre { get; set; } = string.Empty;
     }
 }

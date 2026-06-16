@@ -46,6 +46,7 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
 
             int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
 
+            var requisito = _requisitoService.ObtenerFormularioEditar(idRequisito);
             var (exito, error) = _requisitoService.Eliminar(idRequisito);
 
             if (!exito)
@@ -54,7 +55,12 @@ namespace SitiosPersonal.Pages.Puestos.RequisitoPuestos
             }
             else
             {
-                _bitacoraService.RegistrarDelete(idUsuario, "RequisitoPuesto", new { id_requisito = idRequisito });
+                _bitacoraService.RegistrarDelete(idUsuario, "RequisitoPuesto", new
+                {
+                    id_requisito = idRequisito,
+                    id_puesto = requisito?.id_puesto,
+                    nombre = requisito?.nombre
+                });
                 TempData["Exito"] = "Requisito eliminado correctamente.";
             }
 
