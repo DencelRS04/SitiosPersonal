@@ -78,6 +78,7 @@ namespace SitiosPersonal.Pages.Seguridad.Roles
             }
             catch (ValidacionException ex)
             {
+                ViewData["ErrorModal"] = ex.Message;
                 ModelState.AddModelError(string.Empty, ex.Message);
 
                 Rol.id_rol = id;

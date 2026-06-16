@@ -9,8 +9,7 @@
         <div class="crud-card-header"><h4 class="crud-card-title">Formulario Pantalla</h4></div><div class="card-body">
         <input type="hidden" asp-for="Pantalla.id_pantalla" />
 
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
+        <div asp-validation-summary="ModelOnly" class="d-none"></div>
         <div class="mb-3"><label class="form-label">Nombre de la pantalla</label><input asp-for="Pantalla.nombre" class="form-control" maxlength="100" /><span asp-validation-for="Pantalla.nombre" class="text-danger"></span></div>
         <div class="mb-4">
             <h5 class="form-section-title">Roles asociados</h5><div class="row">

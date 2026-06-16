@@ -76,6 +76,7 @@ namespace SitiosPersonal.Pages.Seguridad.Modulos
             }
             catch (ValidacionException ex)
             {
+                ViewData["ErrorModal"] = ex.Message;
                 ModelState.AddModelError(string.Empty, ex.Message);
 
                 Pantalla.id_pantalla = id;

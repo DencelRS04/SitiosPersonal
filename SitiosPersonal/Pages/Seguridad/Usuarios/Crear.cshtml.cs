@@ -67,7 +67,9 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
             }
             catch (ValidacionException ex)
             {
+                ViewData["ErrorModal"] = ex.Message;
                 ModelState.AddModelError(string.Empty, ex.Message);
+
                 Usuario.RolesDisponibles = _usuariosService.ListarRoles();
                 return Page();
             }

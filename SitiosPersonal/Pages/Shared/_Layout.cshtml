@@ -126,8 +126,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
 
-    @await RenderSectionAsync("Scripts", required: false)
-
     @if (!string.IsNullOrEmpty(nombreUsuario))
     {
         <!-- Modal SEG7: Sesión Expirada -->
@@ -149,60 +147,124 @@
             </div>
         </div>
 
-        <script>
-            (function () {
-                // SEG7: Temporizador de inactividad - leído desde parámetro SESION_MINUTOS
-                var TIEMPO_INACTIVIDAD = @sesionMinutos * 60 * 1000;
-                var timerInactividad;
-                var modalMostrado = false;
-
-                function reiniciarTimer() {
-                    if (modalMostrado) return;
-                    clearTimeout(timerInactividad);
-                    timerInactividad = setTimeout(mostrarModalExpiracion, TIEMPO_INACTIVIDAD);
-                }
-
-                function mostrarModalExpiracion() {
-                    if (modalMostrado) return;
-                    modalMostrado = true;
-                    var modal = new bootstrap.Modal(document.getElementById('modalSesionExpirada'));
-                    modal.show();
-                }
-
-                // Redirigir al login al aceptar
-                document.getElementById('btnAceptarSesion').addEventListener('click', function () {
-                window.location.href = '/Login';
-                });
-
-                // Eventos que reinician el timer de inactividad
-                ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function (evento) {
-                    document.addEventListener(evento, reiniciarTimer, true);
-                });
-
-                // Iniciar timer al cargar la página
-                reiniciarTimer();
-            })();
-        </script>
-
         <!-- Modal de errores de validación -->
         <div class="modal fade" id="modalValidacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title">
-                            <i class=""></i>Errores 
-                        </h5>
+                        <h5 class="modal-title">Errores</h5>
                     </div>
                     <div class="modal-body">
                         <ul id="listaErroresValidacion" class="mb-0"></ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cerrar
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+                (function () {
+                    var TIEMPO_INACTIVIDAD = @sesionMinutos * 60 * 1000;
+                    var timerInactividad;
+                    var modalMostrado = false;
+
+                    function reiniciarTimer() {
+                        if (modalMostrado) return;
+
+                        clearTimeout(timerInactividad);
+                        timerInactividad = setTimeout(mostrarModalExpiracion, TIEMPO_INACTIVIDAD);
+                    }
+
+                    function mostrarModalExpiracion() {
+                        if (modalMostrado) return;
+
+                        modalMostrado = true;
+
+                        var modalElement = document.getElementById('modalSesionExpirada');
+
+                        if (!modalElement) {
+                            return;
+                        }
+
+                        var modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                        modal.show();
+                    }
+
+                    var botonAceptar = document.getElementById('btnAceptarSesion');
+
+                    if (botonAceptar) {
+                        botonAceptar.addEventListener('click', function () {
+                            window.location.href = '/Login';
+                        });
+                    }
+
+                    ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'].forEach(function (evento) {
+                        document.addEventListener(evento, reiniciarTimer, true);
+                    });
+
+                    reiniciarTimer();
+                })();
+        </script>
     }
+
+    <script>
+            window.mostrarModalValidacion = function (mensajes) {
+                if (!Array.isArray(mensajes)) {
+                    mensajes = [mensajes];
+                }
+
+                var lista = document.getElementById('listaErroresValidacion');
+                var modalElement = document.getElementById('modalValidacion');
+
+                if (!lista || !modalElement) {
+                    return;
+                }
+
+                var mensajesUnicos = [];
+
+                mensajes.forEach(function (mensaje) {
+                    mensaje = (mensaje || '').trim();
+
+                    if (mensaje && mensajesUnicos.indexOf(mensaje) === -1) {
+                        mensajesUnicos.push(mensaje);
+                    }
+                });
+
+                if (mensajesUnicos.length === 0) {
+                    return;
+                }
+
+                lista.innerHTML = '';
+
+                mensajesUnicos.forEach(function (mensaje) {
+                    var li = document.createElement('li');
+                    li.textContent = mensaje;
+                    lista.appendChild(li);
+                });
+
+                var modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                modal.show();
+            };
+    </script>
+
+    @if (ViewData["ErrorModal"] != null)
+    {
+        <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var mensaje = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewData["ErrorModal"]?.ToString()));
+
+                    if (mensaje && typeof window.mostrarModalValidacion === 'function') {
+                        window.mostrarModalValidacion([mensaje]);
+                    }
+                });
+        </script>
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>
