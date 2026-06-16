@@ -44,7 +44,7 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
 
             if (!eliminado)
             {
-                TempData["Error"] = mensajeError;
+                TempData["ErrorModal"] = mensajeError ?? "No se puede eliminar un registro con datos relacionados.";
                 return RedirectToPage("Index");
             }
 
@@ -63,7 +63,7 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
 
             if (!actualizado)
             {
-                TempData["Error"] = mensajeError;
+                TempData["ErrorModal"] = mensajeError ?? "No se pudo actualizar el estado del usuario.";
                 return RedirectToPage("Index");
             }
 
@@ -89,7 +89,7 @@ namespace SitiosPersonal.Pages.Seguridad.Usuarios
 
             if (!tienePermiso)
             {
-                TempData["Error"] = "No tiene permisos para acceder a esta pantalla.";
+                TempData["ErrorModal"] = "No tiene permisos para acceder a esta pantalla.";
                 return RedirectToPage("/Home/Index");
             }
 

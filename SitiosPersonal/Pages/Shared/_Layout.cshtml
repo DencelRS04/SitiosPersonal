@@ -264,6 +264,25 @@
         </script>
     }
 
+
+    @{
+        var errorModalTempData = TempData["ErrorModal"]?.ToString();
+    }
+
+    @if (!string.IsNullOrWhiteSpace(errorModalTempData))
+    {
+        <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var mensaje = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(errorModalTempData));
+
+                    if (mensaje && typeof window.mostrarModalValidacion === 'function') {
+                        window.mostrarModalValidacion([mensaje]);
+                    }
+                });
+        </script>
+    }
+
+
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

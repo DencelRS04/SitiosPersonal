@@ -44,7 +44,7 @@ namespace SitiosPersonal.Pages.Seguridad.Modulos
 
             if (!eliminado)
             {
-                TempData["Error"] = mensajeError;
+                TempData["ErrorModal"] = mensajeError ?? "No se puede eliminar un registro con datos relacionados.";
                 return RedirectToPage("Index");
             }
 
@@ -70,7 +70,7 @@ namespace SitiosPersonal.Pages.Seguridad.Modulos
 
             if (!tienePermiso)
             {
-                TempData["Error"] = "No tiene permisos para acceder a esta pantalla.";
+                TempData["ErrorModal"] = "No tiene permisos para acceder a esta pantalla.";
                 return RedirectToPage("/Home/Index");
             }
 
