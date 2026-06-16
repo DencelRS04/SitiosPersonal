@@ -20,15 +20,6 @@
 
     <div class="card-body">
 
-        @if (TempData["Exito"] != null)
-        {
-            <div class="alert alert-success">@TempData["Exito"]</div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="alert alert-danger">@TempData["Error"]</div>
-        }
-
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -109,6 +100,21 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="modalMensaje" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" id="modalMensajeHeader">
+                <h5 class="modal-title" id="modalMensajeTitulo"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalMensajeTexto"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script>
         document.getElementById('modalEliminar').addEventListener('show.bs.modal', function (e) {
@@ -116,5 +122,20 @@
             document.getElementById('nombreEliminar').textContent = btn.getAttribute('data-nombre');
             document.getElementById('formEliminar').action = '/General/Parametros?handler=Eliminar&id=' + btn.getAttribute('data-id');
         });
+    </script>
+    <script>
+        (function () {
+            var exito = '@Html.Raw(TempData["Exito"])';
+            var error = '@Html.Raw(TempData["Error"])';
+            var msg = exito || error;
+            if (msg) {
+                var header = document.getElementById('modalMensajeHeader');
+                header.className = 'modal-header ' + (exito ? 'bg-success text-white' : 'bg-danger text-white');
+                document.getElementById('modalMensajeTitulo').textContent = exito ? 'Operación exitosa' : 'Error';
+                document.getElementById('modalMensajeTexto').textContent = msg;
+                var modal = new bootstrap.Modal(document.getElementById('modalMensaje'));
+                modal.show();
+            }
+        })();
     </script>
 }
